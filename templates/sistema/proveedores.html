@@ -7,7 +7,7 @@ Registro
 
 
 {% block contenido %}
-<h1 class="display-1">Registro Proveedores</h1>
+<h1 class="h3 mb-2 text-gray-800">Registro Proveedores</h1>
 
 </br>
 
@@ -17,37 +17,44 @@ Registro
       <a href="<?php echo base_url(); ?>/categorias/nuevo" class="btn btn-warning">Eliminar </a>
   </p>
 </div> {% endcomment %}
-
-<div class="card shadow mb-4">
-  <div class="card-body">
-      <div class="table-responsive">
-        <table id="tabla-proveedores" class="display">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Dirección</th>
-                <th>Teléfono</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-                {% for proveedor in proveedores %}
-                <tr>
-                  <td>{{ proveedor.nombre }}</td>
-                  <td>{{ proveedor.direccion }}</td>
-                  <td>{{ proveedor.telefono }}</td>
-                  <td>
-                    <a href="{% url 'detalle_proveedor' proveedor.id %}">Editar</a>
-                    <a href="{% url 'eliminar_proveedor' proveedor.id %}">Eliminar</a>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-          </table>
-        </div>
-      </div>
-  </div>
-
+<div class="container-fluid">
+ <div class="card shadow mb-4">
+   <div class="card-body">
+       <div class="table-responsive">
+          <table class="table table-bordered" id="tabla-proveedores" width="100%" cellspacing="0">
+             <thead>
+               <tr>
+                 <th>Nombre</th>
+                 <th>Dirección</th>
+                 <th>Teléfono</th>
+                 <th>Acciones</th>
+               </tr>
+             </thead>
+             <tbody>
+                 {% for proveedor in proveedores %}
+                 <tr>
+                   <td>{{ proveedor.nombre }}</td>
+                   <td>{{ proveedor.direccion }}</td>
+                   <td>{{ proveedor.telefono }}</td>
+                   <td>
+                      <a href="{% url 'detalle_proveedor' proveedor.id %}" class="btn btn-success">
+                        <span class="icon text-white-50">
+                        <i class="fas fa-edit"></i>
+                      </span>
+                        <span class="text">Editar</span>
+                      </a>
+                      <a href="{% url 'eliminar_proveedor' proveedor.id %}" class="btn btn-danger">Borrar
+                        <i class="fas fa-trash-alt"></i>
+                      </a>
+                   </td>
+                 </tr>
+                 {% endfor %}
+               </tbody>
+           </table>
+         </div>
+       </div>
+   </div>
+</div>
 
 {% comment %} 
 <ul>
