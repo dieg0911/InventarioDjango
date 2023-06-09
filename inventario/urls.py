@@ -30,4 +30,9 @@ urlpatterns = [
     path('proveedores/eliminar/<int:proveedor_id>', eliminar_proveedor, name='eliminar_proveedor'),
     path('logout/', logoutuser, name='logout'),
     # path('login/', loginuser, name='login'),
+    #sucursales
+    path('sucursales/', sucursales, name='sucursales'),
+    path('sucursales/crear/', crear_sucursal, name='crear_sucursal'),
+    path('sucursales/<int:sucursal_id>/', detalle_sucursal, name='detalle_sucursal'),
+    path('sucursales/eliminar/<int:sucursal_id>', eliminar_sucursal, name='eliminar_sucursal'),
 ]

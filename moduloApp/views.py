@@ -3,8 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm
-from .models import Proveedor
+from .forms import ProveedorForm, SucursalForm
+from .models import Proveedor, Sucursal
 from django.contrib.auth.decorators import login_required
 
 
@@ -113,3 +113,51 @@ def eliminar_proveedor(request, proveedor_id):
     proveedor = get_object_or_404(Proveedor, pk=proveedor_id)
     proveedor.delete()
     return redirect('proveedores')
+
+#sucursales, crear y editar sucursales
+@login_required
+def sucursales(request):
+    Sucursal.objects.all()
+    return render(request, 'sistema/sucursales.html', {'sucursales': Sucursal.objects.all()})
+#crear sucursal
+@login_required
+def crear_sucursal(request):
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_sucursal.html', {
+            'form': SucursalForm()
+        })
+    else:
+        try:
+            form_sucursal = SucursalForm(request.POST)
+            new_sucursal = form_sucursal.save(commit=False)
+            new_sucursal.user = request.user
+            new_sucursal.save()
+            print(new_sucursal)
+            return redirect('sucursales')
+        except ValueError:
+           return render(request, 'sistema/crear_sucursal.html', {
+            'form': SucursalForm,
+            "error": "Los datos no son validos" 
+            })
+#detalle sucursal
+@login_required
+def detalle_sucursal(request, sucursal_id):
+    if request.method == 'GET':
+        sucursal = get_object_or_404(Sucursal, pk=sucursal_id)
+        form_sucursal = SucursalForm(instance=sucursal)
+        return render(request, 'sistema/detalle_sucursal.html', {'sucursal': sucursal, 'form': form_sucursal})
+    else:
+        try:
+            sucursal = get_object_or_404(Sucursal, pk=sucursal_id,)
+            form = SucursalForm(request.POST, instance=sucursal)
+            form.save()
+            return redirect('sucursales')
+        except ValueError:
+            return render(request, 'sistema/detalle_sucursal.html', {'sucursal': sucursal, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta sucursal'
+            })
+#eliminar sucursal
+@login_required
+def eliminar_sucursal(request, sucursal_id):
+    sucursal = get_object_or_404(Sucursal, pk=sucursal_id)
+    sucursal.delete()
+    return redirect('sucursales')
