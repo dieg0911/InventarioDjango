@@ -91,9 +91,33 @@
   <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function() {
-      $('#tabla-proveedores').DataTable();
+      $('.tabla-datatable').DataTable({
+        // Configuración común para todas las tablas con la clase "tabla-datatable"
+        "paging": true, // Habilitar la paginación
+        "lengthChange": true, // Habilitar el cambio de longitud de página
+        "searching": true, // Habilitar la búsqueda
+        "ordering": true, // Habilitar la ordenación de columnas
+        "info": true, // Habilitar la información de la tabla
+        "autoWidth": false, // Desactivar el ajuste automático del ancho de las columnas
+        "language": { // Personalizar los textos y mensajes
+          "lengthMenu": "Mostrar _MENU_ registros por página",
+          "zeroRecords": "No se encontraron registros",
+          "info": "Mostrando página _PAGE_ de _PAGES_",
+          "infoEmpty": "No hay registros disponibles",
+          "infoFiltered": "(filtrado de _MAX_ registros en total)",
+          "search": "Buscar:",
+          "paginate": {
+            "first": "Primero",
+            "last": "Último",
+            "next": "Siguiente",
+            "previous": "Anterior"
+          }
+        }
+      });
     });
   </script>
+  
+  
 </body>
 
 </html>

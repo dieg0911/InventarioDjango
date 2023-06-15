@@ -1,7 +1,7 @@
 {% extends "sistema/base.html"%}
 
 {% block title %}
-Registro 
+Registro Proveedor
 {%endblock title%}
 
 
@@ -16,14 +16,16 @@ Registro
   <div>
     <p>
         <a href="/proveedores/crear/" class="btn btn-info">Agregar </a>
+        <a href="/proveedores/reingresar/" class="btn btn-info">Reingresar </a>
+
     </p>
   </div>
 
  <div class="card shadow mb-4">
    <div class="card-body">
        <div class="table-responsive">
-          <table class="table table-bordered" id="tabla-proveedores" width="100%" cellspacing="0">
-             <thead>
+        <table class="table table-bordered tabla-datatable" width="100%" cellspacing="0">
+          <thead>
                <tr>
                  <th>Nombre</th>
                  <th>Dirección</th>

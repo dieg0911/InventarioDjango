@@ -3,8 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm, SucursalForm
-from .models import Proveedor, Sucursal
+from .forms import ProveedorForm, SucursalForm, MercanciaForm, EntradaMercanciaForm, SalidaMercanciaForm
+from .models import Proveedor, Sucursal, Mercancia, EntradaMercancia
 from django.contrib.auth.decorators import login_required
 
 
@@ -114,6 +114,11 @@ def eliminar_proveedor(request, proveedor_id):
     proveedor.delete()
     return redirect('proveedores')
 
+def proveedores_eliminados(request):
+    proveedores_eliminados = Proveedor.objects.filter(activo=False)
+    return render(request, 'sistema/proveedores_eliminados.html', {'proveedores_eliminados': proveedores_eliminados})
+
+
 #sucursales, crear y editar sucursales
 @login_required
 def sucursales(request):
@@ -161,3 +166,52 @@ def eliminar_sucursal(request, sucursal_id):
     sucursal = get_object_or_404(Sucursal, pk=sucursal_id)
     sucursal.delete()
     return redirect('sucursales')
+
+#mercania crear y editar mercancia
+@login_required
+def mercancias(request):
+    Mercancia.objects.all()
+    return render(request, 'sistema/mercancias.html', {'mercancias': Mercancia.objects.all()})
+
+@login_required
+def crear_mercancia(request):
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_mercancia.html', {
+            'form': MercanciaForm()
+        })
+    else:
+        try:
+            form_mercancia = MercanciaForm(request.POST)
+            new_mercancia = form_mercancia.save(commit=False)
+            new_mercancia.user = request.user
+            new_mercancia.save()
+            print(new_mercancia)
+            return redirect('mercancias')
+        except ValueError:
+           return render(request, 'sistema/crear_mercancia.html', {
+            'form': MercanciaForm,
+            "error": "Los datos no son validos" 
+            })
+
+@login_required
+def detalle_mercancia(request, mercancia_id):
+    if request.method == 'GET':
+        mercancia = get_object_or_404(Mercancia, pk=mercancia_id)
+        form_mercancia = MercanciaForm(instance=mercancia)
+        return render(request, 'sistema/detalle_mercancia.html', {'mercancia': mercancia, 'form': form_mercancia})
+    else:
+        try:
+            mercancia = get_object_or_404(Mercancia, pk=mercancia_id,)
+            form = MercanciaForm(request.POST, instance=mercancia)
+            form.save()
+            return redirect('mercancias')
+        except ValueError:
+            return render(request, 'sistema/detalle_mercancia.html', {'mercancia': mercancia, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta mercancia'
+            })
+
+@login_required
+def eliminar_mercancia(request, mercancia_id):
+    mercancia = get_object_or_404(Mercancia, pk=mercancia_id)
+    mercancia.delete()
+    return redirect('mercancias')
+

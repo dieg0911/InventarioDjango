@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Proveedor, Sucursal, Mercancia, EntradaMercancia
+from .models import Proveedor, Sucursal, Mercancia, EntradaMercancia, SalidaMercancia
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username')
@@ -26,3 +26,8 @@ class EntradaMercanciaForm(forms.ModelForm):
     class Meta:
         model = EntradaMercancia
         fields = ['mercancia', 'proveedor', 'cantidad']
+
+class SalidaMercanciaForm(forms.ModelForm):
+    class Meta:
+        model = SalidaMercancia
+        fields = ['mercancia', 'sucursal', 'cantidad']

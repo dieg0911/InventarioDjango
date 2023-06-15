@@ -1,0 +1,26 @@
+{% extends "sistema/base.html"%}
+
+{% block title %}
+Nueva Mercancia 
+{%endblock title%}
+
+
+
+{% block contenido %}
+<h1 class="display-1">Ingresar Mercancia</h1>
+
+
+<form action="/mercancias/crear/" method="POST">
+
+    {{error}}
+
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <button type="submit" class="btn btn-primary">Crear</button>
+
+</form>
+
+
+
+{% endblock contenido %}

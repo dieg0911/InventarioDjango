@@ -1,0 +1,31 @@
+{% extends "sistema/base.html"%}
+
+{% block title %}
+Registro 
+{%endblock title%}
+
+
+
+{% block contenido %}
+<h1 class="display-1">Detalle Mercancia</h1>
+
+
+<h1 class="display-4">Nombre: {{mercancia.nombre}}</h1> 
+
+{{error}}
+
+<form method="POST" action="">
+
+{% csrf_token %}
+{{form.as_p}}
+
+<button type="submit" class="btn btn-primary">Actualizar</button>
+
+</form>
+
+<form action="{% url 'eliminar_mercancia' mercancia.id %}" method="POST">
+{% csrf_token %}
+
+<button type="submit" class="btn btn-primary">Eliminar</button>
+</form>
+{% endblock contenido %}

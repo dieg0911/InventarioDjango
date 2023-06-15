@@ -1,0 +1,64 @@
+{% extends "sistema/base.html"%}
+
+{% block title %}
+Registro Mercancia
+{%endblock title%}
+
+
+
+{% block contenido %}
+<h1 class="h3 mb-2 text-gray-800">Registro Mercancia</h1>
+
+</br>
+
+<div class="container-fluid">
+
+  <div>
+    <p>
+        <a href="/mercancias/crear/" class="btn btn-info">Agregar </a>
+        <a href="/mercancias/reingresar/" class="btn btn-info">Reingresar </a>
+
+    </p>
+  </div>
+
+    <div class="card shadow mb-4">
+         <div class="card-body">
+             <div class="table-responsive">
+              <table class="table table-bordered tabla-datatable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Codigo</th>
+                        <th>Cantidad</th>
+                        <th>Valor Unitario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mercancia in mercancias %}
+                    <tr>
+                        <td>{{mercancia.nombre}}</td>
+                        <td>{{mercancia.codigo}}</td>
+                        <td>{{mercancia.cantidad}}</td>
+                        <td>{{mercancia.valor_unitario}}</td>
+                        <td>
+                            <a href="{% url 'detalle_mercancia' mercancia.id %}" class="btn btn-success">
+                                <span class="icon text-white-50">
+                                <i class="fas fa-edit"></i>
+                              </span>
+                                <span class="text">Editar</span>
+                              </a>
+                              <a href="{% url 'eliminar_mercancia' mercancia.id %}" class="btn btn-danger">Borrar
+                                <i class="fas fa-trash-alt"></i>
+                              </a>
+                         </td>
+                    </tr>
+                    {% endfor %}
+              </table>
+         </div>
+       </div>
+    </div>
+
+</div>
+
+{% endblock contenido %}
