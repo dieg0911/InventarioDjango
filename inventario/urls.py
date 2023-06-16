@@ -44,6 +44,7 @@ urlpatterns = [
     path('mercancias/<int:mercancia_id>/', detalle_mercancia, name='detalle_mercancia'),
     path('mercancias/eliminar/<int:mercancia_id>', eliminar_mercancia, name='eliminar_mercancia'),
 
-
+    #salidas
+    #path('salidas/', salidas, name='salidas'),
 ]
 

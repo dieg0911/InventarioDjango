@@ -114,6 +114,7 @@ def eliminar_proveedor(request, proveedor_id):
     proveedor.delete()
     return redirect('proveedores')
 
+@login_required
 def proveedores_eliminados(request):
     proveedores_eliminados = Proveedor.objects.filter(activo=False)
     return render(request, 'sistema/proveedores_eliminados.html', {'proveedores_eliminados': proveedores_eliminados})
@@ -215,3 +216,8 @@ def eliminar_mercancia(request, mercancia_id):
     mercancia.delete()
     return redirect('mercancias')
 
+
+@login_required
+def mercancias_eliminadas(request):
+    mercancias_eliminadas = Mercancia.objects.filter(activo=False)
+    return render(request, 'sistema/mercancias_eliminadas.html', {'mercancias_eliminadas': mercancias_eliminadas})
