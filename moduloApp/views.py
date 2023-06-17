@@ -129,7 +129,6 @@ def proveedores_inactivos(request):
     proveedores = Proveedor.objects.filter(activo=False)
     return render(request, 'sistema/proveedores_inactivos.html', {'proveedores': proveedores})
 
-
 @login_required
 def reingresar_proveedor(request, proveedor_id):
     proveedor = get_object_or_404(Proveedor, id=proveedor_id)

@@ -1,26 +1,54 @@
-{% extends "sistema/base.html"%}
+{% extends "sistema/base.html" %}
 
 {% block title %}
-Registro 
-{%endblock title%}
-
-
+Registro
+{% endblock title %}
 
 {% block contenido %}
 <h1 class="display-1">Crear Proveedor</h1>
 
-
-<form action="/proveedores/crear/" method="POST">
-
-    {{error}}
-
-    {% csrf_token %}
-    {{form.as_p}}
-
-    <button type="submit" class="btn btn-primary">Crear</button>
-
+<form action="/proveedores/crear/" method="POST" class="needs-validation" novalidate>
+  {% csrf_token %}
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  <div class="form-group">
+    <label for="id_codigo">Código:</label>
+    {{ form.codigo }}
+    {% if form.codigo.errors %}
+    <div class="invalid-feedback">
+      {{ form.codigo.errors|join:", " }}
+    </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="id_nombre">Nombre:</label>
+    {{ form.nombre }}
+    {% if form.nombre.errors %}
+    <div class="invalid-feedback">
+      {{ form.nombre.errors|join:", " }}
+    </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="id_direccion">Dirección:</label>
+    {{ form.direccion }}
+    {% if form.direccion.errors %}
+    <div class="invalid-feedback">
+      {{ form.direccion.errors|join:", " }}
+    </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="id_telefono">Teléfono:</label>
+    {{ form.telefono }}
+    {% if form.telefono.errors %}
+    <div class="invalid-feedback">
+      {{ form.telefono.errors|join:", " }}
+    </div>
+    {% endif %}
+  </div>
+  <button type="submit" class="btn btn-primary">Crear</button>
 </form>
-
-
 
 {% endblock contenido %}
