@@ -1,23 +1,15 @@
 {% extends "sistema/base.html" %}
 
 {% block title %}
-Registro Proveedor
+Proveedores Inactivos
 {% endblock title %}
 
 {% block contenido %}
-<h1 class="h3 mb-2 text-gray-800">Registro Proveedores</h1>
+<h1 class="h3 mb-2 text-gray-800">Proveedores Inactivos</h1>
 
 </br>
 
 <div class="container-fluid">
-  <div>
-    <p>
-      <a href="/proveedores/crear/" class="btn btn-info">Agregar</a>
-      <a href="{% url 'proveedores_inactivos' %}" class="btn btn-info">Reingresar</a>
-    </p>
-  </div>
-  
-
   <div class="card shadow mb-4">
     <div class="card-body">
       <div class="table-responsive">
@@ -37,25 +29,16 @@ Registro Proveedor
               <td>{{ proveedor.direccion }}</td>
               <td>{{ proveedor.telefono }}</td>
               <td>
-                {% if proveedor.activo %}
-                <!-- Proveedor activo -->
                 <a href="{% url 'detalle_proveedor' proveedor.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
                 </a>
-                <a href="{% url 'desactivar_proveedor' proveedor.id %}" class="btn btn-danger">
-                  Borrar
-                  <i class="fas fa-trash-alt"></i>
-                </a>
-                {% else %}
-                <!-- Proveedor eliminado -->
                 <a href="{% url 'reingresar_proveedor' proveedor.id %}" class="btn btn-primary">
                   Reingresar
                   <i class="fas fa-undo"></i>
                 </a>
-                {% endif %}
               </td>
             </tr>
             {% endfor %}

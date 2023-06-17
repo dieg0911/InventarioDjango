@@ -28,7 +28,10 @@ urlpatterns = [
     path('proveedores/crear/', crear_proveedor, name='crear_proveedor'),
     path('proveedores/<int:proveedor_id>/', detalle_proveedor, name='detalle_proveedor'),
     path('proveedores/eliminar/<int:proveedor_id>', eliminar_proveedor, name='eliminar_proveedor'),
-    path('proveedores/eliminados/', proveedores_eliminados, name='proveedores_eliminados'),
+    path('proveedores/inactivos/', proveedores_inactivos, name='proveedores_inactivos'),
+    path('proveedores/reingresar/<int:proveedor_id>/', reingresar_proveedor, name='reingresar_proveedor'),
+    path('proveedores/desactivar/<int:proveedor_id>/', desactivar_proveedor, name='desactivar_proveedor'),
+
 
     path('logout/', logoutuser, name='logout'),
     # path('login/', loginuser, name='login'),

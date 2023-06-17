@@ -66,8 +66,8 @@ def registro(request):
 #proveedores, crear y editar proveedores
 @login_required
 def proveedores(request):
-    Proveedor.objects.all()
-    return render(request, 'sistema/proveedores.html', {'proveedores': Proveedor.objects.all()})
+    proveedores = Proveedor.objects.filter(activo=True)
+    return render(request, 'sistema/proveedores.html', {'proveedores': proveedores})
 
 @login_required
 def crear_proveedor(request):
@@ -76,19 +76,22 @@ def crear_proveedor(request):
             'form': ProveedorForm()
         })
     else:
-        # form_proovedor = ProveedorForm(request.POST)
-        # print(form_proovedor)
         try:
-            form_proovedor = ProveedorForm(request.POST)
-            new_proveedor = form_proovedor.save(commit=False)
-            new_proveedor.user = request.user
-            new_proveedor.save()
-            print(new_proveedor)
-            return redirect('proveedores')
-        except ValueError:
-           return render(request, 'sistema/crear_proveedor.html', {
-            'form': ProveedorForm,
-            "error": "Los datos no son validos" 
+            form_proveedor = ProveedorForm(request.POST)
+            if form_proveedor.is_valid():
+                new_proveedor = form_proveedor.save(commit=False)
+                new_proveedor.user = request.user
+                new_proveedor.save()
+                return redirect('proveedores')
+            else:
+                return render(request, 'sistema/crear_proveedor.html', {
+                    'form': form_proveedor,
+                    'error': 'Los datos no son válidos'
+                })
+        except Exception as e:
+            return render(request, 'sistema/crear_proveedor.html', {
+                'form': ProveedorForm,
+                'error': 'Se produjo un error al guardar el proveedor'
             })
 
 @login_required       
@@ -115,10 +118,24 @@ def eliminar_proveedor(request, proveedor_id):
     return redirect('proveedores')
 
 @login_required
-def proveedores_eliminados(request):
-    proveedores_eliminados = Proveedor.objects.filter(activo=False)
-    return render(request, 'sistema/proveedores_eliminados.html', {'proveedores_eliminados': proveedores_eliminados})
+def desactivar_proveedor(request, proveedor_id):
+    proveedor = get_object_or_404(Proveedor, pk=proveedor_id)
+    proveedor.activo = False
+    proveedor.save()
+    return redirect('proveedores')
 
+@login_required
+def proveedores_inactivos(request):
+    proveedores = Proveedor.objects.filter(activo=False)
+    return render(request, 'sistema/proveedores_inactivos.html', {'proveedores': proveedores})
+
+
+@login_required
+def reingresar_proveedor(request, proveedor_id):
+    proveedor = get_object_or_404(Proveedor, id=proveedor_id)
+    proveedor.activo = True
+    proveedor.save()
+    return redirect('proveedores')
 
 #sucursales, crear y editar sucursales
 @login_required

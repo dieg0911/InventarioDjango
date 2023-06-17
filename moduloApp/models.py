@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Proveedor(models.Model):
-    # id_proveedor = models.AutoField(primary_key=True, db_column='id_proveedor')
     codigo = models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -12,9 +11,8 @@ class Proveedor(models.Model):
     activo = models.BooleanField(default=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
-
     def __str__(self):
-        return self.nombre + '' + self.user.username
+        return self.nombre + ' ' + self.user.username
 
     
 class Sucursal(models.Model):
