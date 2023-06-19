@@ -40,6 +40,9 @@ urlpatterns = [
     path('sucursales/crear/', crear_sucursal, name='crear_sucursal'),
     path('sucursales/<int:sucursal_id>/', detalle_sucursal, name='detalle_sucursal'),
     path('sucursales/eliminar/<int:sucursal_id>', eliminar_sucursal, name='eliminar_sucursal'),
+    path('sucursales/inactivos/', sucursales_inactivas, name='sucursales_inactivas'),
+    path('sucursales/reingresar/<int:sucursal_id>/', reingresar_sucursal, name='reingresar_sucursal'),
+    path('sucursales/desactivar/<int:sucursal_id>/', desactivar_sucursal, name='desactivar_sucursal'),
 
     #mercancias
     path('mercancias/', mercancias, name='mercancias'),

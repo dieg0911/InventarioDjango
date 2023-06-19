@@ -1,10 +1,8 @@
-{% extends "sistema/base.html"%}
+{% extends "sistema/base.html" %}
 
 {% block title %}
-Registro Sucursal 
-{%endblock title%}
-
-
+Registro Sucursal
+{% endblock title %}
 
 {% block contenido %}
 <h1 class="h3 mb-2 text-gray-800">Registro Sucursales</h1>
@@ -12,74 +10,62 @@ Registro Sucursal
 </br>
 
 <div class="container-fluid">
-
   <div>
     <p>
-        <a href="/sucursales/crear/" class="btn btn-info">Agregar </a>
+      <a href="/sucursales/crear/" class="btn btn-info">Agregar</a>
+      <a href="{% url 'sucursales_inactivas' %}" class="btn btn-info">Reingresar</a>
     </p>
   </div>
+  
 
- <div class="card shadow mb-4">
-   <div class="card-body">
-       <div class="table-responsive">
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
         <table class="table table-bordered tabla-datatable" width="100%" cellspacing="0">
           <thead>
-               <tr>
-                 <th>Nombre</th>
-                 <th>Dirección</th>
-                 <th>Teléfono</th>
-                 <th>Responsable</th>
-                  <th>Acciones</th>
-               </tr>
-             </thead>
-             <tbody>
-                 {% for sucursal in sucursales %}
-                 <tr>
-                    <td>{{sucursal.nombre}}</td>
-                    <td>{{sucursal.direccion}}</td>
-                    <td>{{sucursal.telefono}}</td>
-                    <td>{{sucursal.responsable}}</td>
-                    <td>
-                       <a href="{% url 'detalle_sucursal' sucursal.id %}" class="btn btn-success">
-                        <span class="icon text-white-50">
-                        <i class="fas fa-edit"></i>
-                      </span>
-                        <span class="text">Editar</span>
-                      </a>
-                      <a href="{% url 'detalle_sucursal' sucursal.id %}" class="btn btn-danger">Borrar
-                        <i class="fas fa-trash-alt"></i>
-                      </a>
-                    </td>
-                 </tr>
-                 {% endfor %}
-               </tbody>
-           </table>
-         </div>
-       </div>
-   </div>
+            <tr>
+              <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Teléfono</th>
+              <th>Responsable</th>
+               <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sucursal in sucursales %}
+            <tr>
+              <td>{{sucursal.nombre}}</td>
+              <td>{{sucursal.direccion}}</td>
+              <td>{{sucursal.telefono}}</td>
+              <td>{{sucursal.responsable}}</td>
+              <td>
+                {% if sucursal.activo %}
+                <!-- Proveedor activo -->
+                <a href="{% url 'detalle_sucursal' sucursal.id %}" class="btn btn-success">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-edit"></i>
+                  </span>
+                  <span class="text">Editar</span>
+                </a>
+                <a href="{% url 'desactivar_sucursal' sucursal.id %}" class="btn btn-danger">
+                  Borrar
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+                {% else %}
+                <!-- Proveedor eliminado -->
+                <a href="{% url 'reingresar_sucursal' sucursal.id %}" class="btn btn-primary">
+                  Reingresar
+                  <i class="fas fa-undo"></i>
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
-
-{% comment %} 
-<ul>
-
-    {%for proveedor in proveedores%}
-
-    <li>    
-        <a href="{%url 'detalle_proveedor' proveedor.id%}">
-
-            <strong>Proveedor {{proveedor.id}} </strong>
-            <p>  Codigo:  {{proveedor.codigo}} </p>
-            <p>  Nombre:  {{proveedor.nombre}} </p>
-            <p>  Direccion:  {{proveedor.direccion}} </p>
-            <p>  Telefono:  {{proveedor.telefono}} </p>
-
-        </a>
-
-    </li>
-    {%endfor%}
-
-
-</ul> 
-{% endcomment %}
 
 {% endblock contenido %}

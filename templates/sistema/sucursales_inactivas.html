@@ -1,0 +1,54 @@
+{% extends "sistema/base.html" %}
+
+{% block title %}
+Sucursales Inactivas
+{% endblock title %}
+
+{% block contenido %}
+<h1 class="h3 mb-2 text-gray-800"> Sucursales Inactivas</h1>
+
+</br>
+
+<div class="container-fluid">
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered tabla-datatable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Responsable</th>
+                 <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sucursal in sucursales %}
+            <tr>
+                <td>{{sucursal.nombre}}</td>
+                <td>{{sucursal.direccion}}</td>
+                <td>{{sucursal.telefono}}</td>
+                <td>{{sucursal.responsable}}</td>
+              <td>
+                <a href="{% url 'detalle_sucursal' sucursal.id %}" class="btn btn-success">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-edit"></i>
+                  </span>
+                  <span class="text">Editar</span>
+                </a>
+                <a href="{% url 'eliminar_sucursal' sucursal.id %}" class="btn btn-primary">
+                  Reingresar
+                  <i class="fas fa-undo"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock contenido %}

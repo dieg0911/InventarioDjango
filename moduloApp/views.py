@@ -139,8 +139,10 @@ def reingresar_proveedor(request, proveedor_id):
 #sucursales, crear y editar sucursales
 @login_required
 def sucursales(request):
-    Sucursal.objects.all()
-    return render(request, 'sistema/sucursales.html', {'sucursales': Sucursal.objects.all()})
+    sucursales = Sucursal.objects.filter(activo = True)  # Obtener todas las sucursales, tanto activas como inactivas
+    return render(request, 'sistema/sucursales.html', {'sucursales': sucursales})
+
+
 #crear sucursal
 @login_required
 def crear_sucursal(request):
@@ -151,15 +153,20 @@ def crear_sucursal(request):
     else:
         try:
             form_sucursal = SucursalForm(request.POST)
-            new_sucursal = form_sucursal.save(commit=False)
-            new_sucursal.user = request.user
-            new_sucursal.save()
-            print(new_sucursal)
-            return redirect('sucursales')
-        except ValueError:
-           return render(request, 'sistema/crear_sucursal.html', {
-            'form': SucursalForm,
-            "error": "Los datos no son validos" 
+            if form_sucursal.is_valid():
+                new_sucursal = form_sucursal.save(commit=False)
+                new_sucursal.user = request.user
+                new_sucursal.save()
+                return redirect('sucursales')
+            else:
+                return render(request, 'sistema/crear_sucursal.html', {
+                    'form': form_sucursal,
+                    'error': 'Los datos no son válidos'
+                })
+        except Exception as e:
+            return render(request, 'sistema/crear_sucursal.html', {
+                'form': SucursalForm,
+                'error': 'Se produjo un error al guardar la sucursal'
             })
 #detalle sucursal
 @login_required
@@ -183,6 +190,26 @@ def eliminar_sucursal(request, sucursal_id):
     sucursal = get_object_or_404(Sucursal, pk=sucursal_id)
     sucursal.delete()
     return redirect('sucursales')
+#desactivar sucursal
+@login_required
+def desactivar_sucursal(request, sucursal_id):
+    sucursal = get_object_or_404(Sucursal, pk=sucursal_id)
+    sucursal.activo = False
+    sucursal.save()
+    return redirect('sucursales')
+#sucursales inactivas
+@login_required
+def sucursales_inactivas(request):
+    sucursales = Sucursal.objects.filter(activo=False)
+    return render(request, 'sistema/sucursales_inactivas.html', {'sucursales': sucursales})
+#reingresar sucursal
+@login_required
+def reingresar_sucursal(request, sucursal_id):
+    sucursal = get_object_or_404(Sucursal, id=sucursal_id)
+    sucursal.activo = True
+    sucursal.save()
+    return redirect('sucursales')
+
 
 #mercania crear y editar mercancia
 @login_required
