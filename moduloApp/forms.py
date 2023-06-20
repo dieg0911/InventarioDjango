@@ -20,7 +20,7 @@ class SucursalForm(forms.ModelForm):
 class MercanciaForm(forms.ModelForm):
     class Meta:
         model = Mercancia
-        fields = ['codigo', 'nombre', 'cantidad', 'valor_unitario', 'categoria']
+        fields = ['nombre', 'codigo', 'valor_unitario', 'categoria']
 
 class EntradaMercanciaForm(forms.ModelForm):
     class Meta:

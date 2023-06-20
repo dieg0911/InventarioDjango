@@ -278,8 +278,8 @@ def reingresar_mercancia(request, mercancia_id):
 #categorias crear y editar categorias
 @login_required
 def categorias(request):
-    Categoria.objects.all()
-    return render(request, 'sistema/categorias.html', {'categorias': Categoria.objects.all()})
+    categorias = Categoria.objects.filter(activo = True)  # Obtener todas las categorias, tanto activas como inactivas
+    return render(request, 'sistema/categorias.html', {'categorias': categorias})
 #crear categoria
 @login_required
 def crear_categoria(request):
@@ -341,5 +341,3 @@ def reingresar_categoria(request, categoria_id):
     categoria.activo = True
     categoria.save()
     return redirect('categorias')
-
-#

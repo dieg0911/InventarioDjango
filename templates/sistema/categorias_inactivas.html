@@ -1,22 +1,15 @@
 {% extends "sistema/base.html" %}
 
 {% block title %}
-Registro Categoria
+Categorias Inactivos
 {% endblock title %}
 
 {% block contenido %}
-<h1 class="h3 mb-2 text-gray-800">Registro Categoria</h1>
+<h1 class="h3 mb-2 text-gray-800">Categorias Inactivos</h1>
 
 </br>
 
 <div class="container-fluid">
-  <div>
-    <p>
-      <a href="/categorias/crear/" class="btn btn-info">Agregar Categoría</a>
-      <a href="/categorias/inactivos/" class="btn btn-info ml-auto">Reingresar</a>
-    </p>
-  </div>
-
   <div class="card shadow mb-4">
     <div class="card-body">
       <div class="table-responsive">
@@ -31,28 +24,19 @@ Registro Categoria
           <tbody>
             {% for categoria in categorias %}
             <tr>
-              <td>{{ categoria.nombre }}</td>
-              <td>{{ categoria.descripcion }}</td>
+                <td>{{ categoria.nombre }}</td>
+                <td>{{ categoria.descripcion }}</td>
               <td>
-                {% if categoria.activo %}
-                <!-- Proveedor activo -->
-                <a href="{% url 'detalle_categoria' categoria.id %}" class="btn btn-success">
+                <a href="{% url 'reingresar_categoria' categoria.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
                 </a>
-                <a href="{% url 'desactivar_categoria' categoria.id %}" class="btn btn-danger">
-                  Borrar
-                  <i class="fas fa-trash-alt"></i>
-                </a>
-                {% else %}
-                <!-- Proveedor eliminado -->
-                <a href="{% url 'reingresar_categoria' categoria.id %}" class="btn btn-primary">
+                <a href="{% url 'eliminar_categoria' categoria.id %}" class="btn btn-primary">
                   Reingresar
                   <i class="fas fa-undo"></i>
                 </a>
-                {% endif %}
               </td>
             </tr>
             {% endfor %}
@@ -61,7 +45,6 @@ Registro Categoria
       </div>
     </div>
   </div>
-
 </div>
 
 {% endblock contenido %}
