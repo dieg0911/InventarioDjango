@@ -3,8 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm, SucursalForm, MercanciaForm, EntradaMercanciaForm, SalidaMercanciaForm
-from .models import Proveedor, Sucursal, Mercancia, EntradaMercancia
+from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm
+from .models import Proveedor, Sucursal, Mercancia, Categoria
 from django.contrib.auth.decorators import login_required
 
 
@@ -214,8 +214,9 @@ def reingresar_sucursal(request, sucursal_id):
 #mercania crear y editar mercancia
 @login_required
 def mercancias(request):
-    Mercancia.objects.all()
-    return render(request, 'sistema/mercancias.html', {'mercancias': Mercancia.objects.all()})
+    mercancias = Mercancia.objects.filter(activo = True)  # Obtener todas las mercancias, tanto activas como inactivas
+    return render(request, 'sistema/mercancias.html', {'mercancias': mercancias})
+
 
 @login_required
 def crear_mercancia(request):
@@ -259,8 +260,88 @@ def eliminar_mercancia(request, mercancia_id):
     mercancia.delete()
     return redirect('mercancias')
 
+@login_required
+def desactivar_mercancia(request, mercancia_id):
+    mercancia = get_object_or_404(Mercancia, pk=mercancia_id)
+    mercancia.activo = False
+    mercancia.save()
+    return redirect('mercancias')
 
 @login_required
-def mercancias_eliminadas(request):
-    mercancias_eliminadas = Mercancia.objects.filter(activo=False)
-    return render(request, 'sistema/mercancias_eliminadas.html', {'mercancias_eliminadas': mercancias_eliminadas})
+def mercancias_inactivas(request):
+    mercancias = Mercancia.objects.filter(activo=False)
+    return render(request, 'sistema/mercancias_inactivas.html', {'mercancias': mercancias})
+
+@login_required
+def reingresar_mercancia(request, mercancia_id):
+    mercancia = get_object_or_404(Mercancia, id=mercancia_id)
+    mercancia.activo = True
+    mercancia.save()
+    return redirect('mercancias')
+
+#categorias crear y editar categorias
+@login_required
+def categorias(request):
+    Categoria.objects.all()
+    return render(request, 'sistema/categorias.html', {'categorias': Categoria.objects.all()})
+#crear categoria
+@login_required
+def crear_categoria(request):
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_categoria.html', {
+            'form': CategoriaForm()
+        })
+    else:
+        try:
+            form_categoria = CategoriaForm(request.POST)
+            new_categoria = form_categoria.save(commit=False)
+            new_categoria.user = request.user
+            new_categoria.save()
+            print(new_categoria)
+            return redirect('categorias')
+        except ValueError:
+           return render(request, 'sistema/crear_categoria.html', {
+            'form': CategoriaForm,
+            "error": "Los datos no son validos" 
+            })
+#detalle categoria
+@login_required
+def detalle_categoria(request, categoria_id):
+    if request.method == 'GET':
+        categoria = get_object_or_404(Categoria, pk=categoria_id)
+        form_categoria = CategoriaForm(instance=categoria)
+        return render(request, 'sistema/detalle_categoria.html', {'categoria': categoria, 'form': form_categoria})
+    else:
+        try:
+            categoria = get_object_or_404(Categoria, pk=categoria_id,)
+            form = CategoriaForm(request.POST, instance=categoria)
+            form.save()
+            return redirect('categorias')
+        except ValueError:
+            return render(request, 'sistema/detalle_categoria.html', {'categoria': categoria, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta categoria'
+            })
+#eliminar categoria
+@login_required
+def eliminar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    categoria.delete()
+    return redirect('categorias')
+#desactivar categoria
+@login_required
+def desactivar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, pk=categoria_id)
+    categoria.activo = False
+    categoria.save()
+    return redirect('categorias')
+#categorias inactivas
+@login_required
+def categorias_inactivas(request):
+    categorias = Categoria.objects.filter(activo=False)
+    return render(request, 'sistema/categorias_inactivas.html', {'categorias': categorias})
+#reingresar categoria
+@login_required
+def reingresar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+    categoria.activo = True
+    categoria.save()
+    return redirect('categorias')

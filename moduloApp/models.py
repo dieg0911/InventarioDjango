@@ -26,13 +26,21 @@ class Sucursal(models.Model):
     def __str__(self):
         return self.nombre
     
-    
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+
+    def __str__(self):
+        return self.nombre
+
 class Mercancia(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(max_length=10, unique=True)
     cantidad = models.PositiveIntegerField()
     valor_unitario = models.DecimalField(max_digits=8, decimal_places=2)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
+    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre

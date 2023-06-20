@@ -1,11 +1,11 @@
 {% extends "sistema/base.html" %}
 
 {% block title %}
-Registro Mercancia
+Registro Categoria
 {% endblock title %}
 
 {% block contenido %}
-<h1 class="h3 mb-2 text-gray-800">Registro Mercancia</h1>
+<h1 class="h3 mb-2 text-gray-800">Registro Categoria</h1>
 
 </br>
 
@@ -15,7 +15,7 @@ Registro Mercancia
       <a href="/mercancias/crear/" class="btn btn-info">Agregar</a>
       <a href="/categorias/crear/" class="btn btn-info">Agregar Categoría</a>
       <a href="/stock/crear/{{ mercancia.id }}/" class="btn btn-info">Agregar Stock</a>
-      <a href="/mercancias/reingresar/" class="btn btn-info ml-auto">Reingresar</a>
+      <a href="/categorias/reingresar/" class="btn btn-info ml-auto">Reingresar</a>
     </p>
   </div>
 
@@ -26,29 +26,23 @@ Registro Mercancia
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Codigo</th>
-              <th>Categoria</th>
-              <th>Cantidad</th>
-              <th>Valor Unitario</th>
+              <th>Descripción</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {% for mercancia in mercancias %}
+            {% for categoria in categorias %}
             <tr>
-              <td>{{ mercancia.nombre }}</td>
-              <td>{{ mercancia.codigo }}</td>
-              <td>{{ mercancia.categoria.nombre }}</td> <!-- Accede al campo nombre de la categoría -->
-              <td>{{ mercancia.cantidad }}</td>
-              <td>{{ mercancia.valor_unitario }}</td>
+              <td>{{ categoria.nombre }}</td>
+              <td>{{ categoria.descripcion }}</td>
               <td>
-                <a href="{% url 'detalle_mercancia' mercancia.id %}" class="btn btn-success">
+                <a href="{% url 'detalle_categoria' categoria.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
                 </a>
-                <a href="{% url 'eliminar_mercancia' mercancia.id %}" class="btn btn-danger">Borrar
+                <a href="{% url 'eliminar_categoria' categoria.id %}" class="btn btn-danger">Borrar
                   <i class="fas fa-trash-alt"></i>
                 </a>
               </td>

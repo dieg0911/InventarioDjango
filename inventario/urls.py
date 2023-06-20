@@ -49,6 +49,18 @@ urlpatterns = [
     path('mercancias/crear/', crear_mercancia, name='crear_mercancia'),
     path('mercancias/<int:mercancia_id>/', detalle_mercancia, name='detalle_mercancia'),
     path('mercancias/eliminar/<int:mercancia_id>', eliminar_mercancia, name='eliminar_mercancia'),
+    path('mercancias/inactivos/', mercancias_inactivas, name='mercancias_inactivas'),
+    path('mercancias/reingresar/<int:mercancia_id>/', reingresar_mercancia, name='reingresar_mercancia'),
+    path('mercancias/desactivar/<int:mercancia_id>/', desactivar_mercancia, name='desactivar_mercancia'),
+
+    #categorias
+    path('categorias/', categorias, name='categorias'),
+    path('categorias/crear/', crear_categoria, name='crear_categoria'),
+    path('categorias/<int:categoria_id>/', detalle_categoria, name='detalle_categoria'),
+    path('categorias/eliminar/<int:categoria_id>', eliminar_categoria, name='eliminar_categoria'),
+    path('categorias/inactivos/', categorias_inactivas, name='categorias_inactivas'),
+    path('categorias/reingresar/<int:categoria_id>/', reingresar_categoria, name='reingresar_categoria'),
+    path('categorias/desactivar/<int:categoria_id>/', desactivar_categoria, name='desactivar_categoria'),
 
     #salidas
     #path('salidas/', salidas, name='salidas'),
