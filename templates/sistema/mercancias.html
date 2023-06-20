@@ -15,7 +15,7 @@ Registro Mercancia
       <a href="/mercancias/crear/" class="btn btn-info">Agregar</a>
       <a href="/categorias/crear/" class="btn btn-info">Agregar Categoría</a>
       <a href="/stock/crear/{{ mercancia.id }}/" class="btn btn-info">Agregar Stock</a>
-      <a href="/mercancias/reingresar/" class="btn btn-info ml-auto">Reingresar</a>
+      <a href="/mercancias/inactivos/" class="btn btn-info ml-auto">Reingresar</a>
     </p>
   </div>
 
@@ -42,15 +42,25 @@ Registro Mercancia
               <td>{{ mercancia.cantidad }}</td>
               <td>{{ mercancia.valor_unitario }}</td>
               <td>
+                {% if mercancia.activo %}
+                <!-- Proveedor activo -->
                 <a href="{% url 'detalle_mercancia' mercancia.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
                 </a>
-                <a href="{% url 'eliminar_mercancia' mercancia.id %}" class="btn btn-danger">Borrar
+                <a href="{% url 'desactivar_mercancia' mercancia.id %}" class="btn btn-danger">
+                  Borrar
                   <i class="fas fa-trash-alt"></i>
                 </a>
+                {% else %}
+                <!-- Proveedor eliminado -->
+                <a href="{% url 'reingresar_mercancia' mercancia.id %}" class="btn btn-primary">
+                  Reingresar
+                  <i class="fas fa-undo"></i>
+                </a>
+                {% endif %}
               </td>
             </tr>
             {% endfor %}

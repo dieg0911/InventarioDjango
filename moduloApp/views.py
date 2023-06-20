@@ -16,7 +16,6 @@ def index(request):
 #home
 def home(request):
     return render(request, 'sistema/basehome.html')
-
 #login y logout
 def loginuser(request):
     if request.method == 'GET':
@@ -33,7 +32,7 @@ def loginuser(request):
         else:
             login(request, user)
             return redirect('home')
-        
+
 def logoutuser(request):
         logout(request)
         return redirect('login')
@@ -68,7 +67,7 @@ def registro(request):
 def proveedores(request):
     proveedores = Proveedor.objects.filter(activo=True)
     return render(request, 'sistema/proveedores.html', {'proveedores': proveedores})
-
+#crear proveedor
 @login_required
 def crear_proveedor(request):
     if request.method == 'GET':
@@ -93,7 +92,7 @@ def crear_proveedor(request):
                 'form': ProveedorForm,
                 'error': 'Se produjo un error al guardar el proveedor'
             })
-
+#detalle proveedor
 @login_required       
 def detalle_proveedor(request, proveedor_id):
     if request.method == 'GET':
@@ -110,25 +109,25 @@ def detalle_proveedor(request, proveedor_id):
         except ValueError:
             return render(request, 'sistema/detalle_proveedor.html', {'proveedor': proveedor, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar este proveedor'
             })
-
+#eliminar proveedor
 @login_required
 def eliminar_proveedor(request, proveedor_id):
     proveedor = get_object_or_404(Proveedor, pk=proveedor_id)
     proveedor.delete()
     return redirect('proveedores')
-
+#desactivar proveedor
 @login_required
 def desactivar_proveedor(request, proveedor_id):
     proveedor = get_object_or_404(Proveedor, pk=proveedor_id)
     proveedor.activo = False
     proveedor.save()
     return redirect('proveedores')
-
+#proveedores inactivos
 @login_required
 def proveedores_inactivos(request):
     proveedores = Proveedor.objects.filter(activo=False)
     return render(request, 'sistema/proveedores_inactivos.html', {'proveedores': proveedores})
-
+#reingresar proveedor
 @login_required
 def reingresar_proveedor(request, proveedor_id):
     proveedor = get_object_or_404(Proveedor, id=proveedor_id)
@@ -141,8 +140,6 @@ def reingresar_proveedor(request, proveedor_id):
 def sucursales(request):
     sucursales = Sucursal.objects.filter(activo = True)  # Obtener todas las sucursales, tanto activas como inactivas
     return render(request, 'sistema/sucursales.html', {'sucursales': sucursales})
-
-
 #crear sucursal
 @login_required
 def crear_sucursal(request):
@@ -216,8 +213,7 @@ def reingresar_sucursal(request, sucursal_id):
 def mercancias(request):
     mercancias = Mercancia.objects.filter(activo = True)  # Obtener todas las mercancias, tanto activas como inactivas
     return render(request, 'sistema/mercancias.html', {'mercancias': mercancias})
-
-
+#crear mercancia
 @login_required
 def crear_mercancia(request):
     if request.method == 'GET':
@@ -237,7 +233,7 @@ def crear_mercancia(request):
             'form': MercanciaForm,
             "error": "Los datos no son validos" 
             })
-
+#detalle mercancia
 @login_required
 def detalle_mercancia(request, mercancia_id):
     if request.method == 'GET':
@@ -253,25 +249,25 @@ def detalle_mercancia(request, mercancia_id):
         except ValueError:
             return render(request, 'sistema/detalle_mercancia.html', {'mercancia': mercancia, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta mercancia'
             })
-
+#eliminar mercancia
 @login_required
 def eliminar_mercancia(request, mercancia_id):
     mercancia = get_object_or_404(Mercancia, pk=mercancia_id)
     mercancia.delete()
     return redirect('mercancias')
-
+#desactivar mercancia
 @login_required
 def desactivar_mercancia(request, mercancia_id):
     mercancia = get_object_or_404(Mercancia, pk=mercancia_id)
     mercancia.activo = False
     mercancia.save()
     return redirect('mercancias')
-
+#mercancias inactivas
 @login_required
 def mercancias_inactivas(request):
     mercancias = Mercancia.objects.filter(activo=False)
     return render(request, 'sistema/mercancias_inactivas.html', {'mercancias': mercancias})
-
+#reingresar mercancia
 @login_required
 def reingresar_mercancia(request, mercancia_id):
     mercancia = get_object_or_404(Mercancia, id=mercancia_id)
@@ -345,3 +341,5 @@ def reingresar_categoria(request, categoria_id):
     categoria.activo = True
     categoria.save()
     return redirect('categorias')
+
+#
