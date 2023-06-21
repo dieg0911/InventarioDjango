@@ -32,6 +32,7 @@ class SalidaMercanciaForm(forms.ModelForm):
         model = SalidaMercancia
         fields = ['mercancia', 'sucursal', 'cantidad']
 
+
 class DevolucionForm(forms.ModelForm):
     class Meta:
         model = SalidaMercancia

@@ -1,3 +1,4 @@
+from typing import Any, Dict, Tuple
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -51,21 +52,21 @@ class Mercancia(models.Model):
         cantidad_actual = self.cantidad
         self.cantidad = cantidad_actual + int(cantidad)  # Sumar la cantidad ingresada al valor actual
         self.save()
-        RegistroCantidad.objects.create(mercancia=self, cantidad=cantidad)
+        RegistroEntrada.objects.create(mercancia=self, cantidad=cantidad)
 
     def sustraer_stock(self, cantidad):
         if self.cantidad >= cantidad:
             self.cantidad -= cantidad
             self.save()
-            RegistroCantidad.objects.create(mercancia=self, cantidad=cantidad)
+            RegistroSalida.objects.create(mercancia=self, cantidad=cantidad)
 
-class RegistroCantidad(models.Model):
+class RegistroEntrada(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Registro {self.id} - {self.mercancia.nombre}"
+        return f"Registro de Entrada {self.id} - {self.mercancia.nombre}"
     
 class EntradaMercancia(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
@@ -85,6 +86,17 @@ class EntradaMercancia(models.Model):
         if is_new_entry:
             self.mercancia.agregar_stock(self.cantidad)
 
+    def delete(self, *args, **kwargs):
+        self.mercancia.sustraer_stock(self.cantidad)
+        super().delete(*args, **kwargs)
+
+class RegistroSalida(models.Model):
+    mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Registro de Salida {self.id} - {self.mercancia.nombre}"
 
 class SalidaMercancia(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
@@ -95,10 +107,24 @@ class SalidaMercancia(models.Model):
 
     def __str__(self):
         return str(self.id)
-
+    
     def save(self, *args, **kwargs):
+        is_new_entry = self.pk is None
+
         super().save(*args, **kwargs)
-        self.mercancia.sustraer_stock(self.cantidad)
+
+        if is_new_entry:
+
+            if self.mercancia.cantidad >= self.cantidad:
+                self.mercancia.sustraer_stock(self.cantidad)
+            else:
+                raise Exception("No hay suficiente stock")
+            
+    def delete(self, *args, **kwargs):
+        self.mercancia.agregar_stock(self.cantidad)
+        super().delete(*args, **kwargs)
+    
+
     
 class Devolucion(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)

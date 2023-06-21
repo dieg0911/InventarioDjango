@@ -75,6 +75,8 @@ urlpatterns = [
     #salidas
     path('salidas/', salidas, name='salidas'),
     path('salidas/crear/', crear_salida, name='crear_salida'),
+    # path('salidas/<int:salida_id>/', detalle_salida, name='detalle_salida'),
+    path('salidas/eliminar/<int:salida_id>', eliminar_salida, name='eliminar_salida'),
     #path('salidas/', salidas, name='salidas'),
 ]
 

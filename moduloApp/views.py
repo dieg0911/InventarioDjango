@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm, EntradaMercanciaForm, SalidaMercanciaForm, DevolucionForm, RegistroCantidadForm
-from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, RegistroCantidad
+from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, RegistroEntrada, RegistroSalida
 from django.contrib.auth.decorators import login_required
 
 
@@ -341,8 +341,7 @@ def registro_cantidad(request):
         if form.is_valid():
             registro = form.save()
             registro.mercancia.agregar_stock(registro.cantidad) 
-
-
+    
 #entrada y salida de mercancia
 @login_required
 def entradas(request):
@@ -367,8 +366,6 @@ def crear_entrada(request):
             'form': EntradaMercanciaForm,
             "error": "Los datos no son validos" 
             })
-
-
 # @login_required
 # def detalle_entrada(request, entrada_id):
 #     if request.method == 'GET':
@@ -406,20 +403,31 @@ def eliminar_entrada(request, entrada_id):
 #     entrada.save()
 #     return redirect('entradas')
 
-
-
 @login_required
 def salidas(request):
     salidas = SalidaMercancia.objects.all()
     return render(request, 'sistema/salidas.html', {'salidas': salidas})
 @login_required
 def crear_salida(request):
-    if request.method == 'POST':
-        form = SalidaMercanciaForm(request.POST)
-        if form.is_valid():
-            salida = form.save()
-            return redirect('ruta-a-redirigir')  # Reemplaza 'ruta-a-redirigir' por la URL a la que deseas redirigir después de crear la salida
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_salida.html', {
+            'form': SalidaMercanciaForm()
+        })
     else:
-        form = SalidaMercanciaForm()
-    
-    return render(request, 'crear_salida.html', {'form': form})
+        try:
+            form_salida = SalidaMercanciaForm(request.POST)
+            new_salida = form_salida.save(commit=False)
+            new_salida.user = request.user
+            new_salida.save()
+            print(new_salida)
+            return redirect('salidas')
+        except ValueError:
+           return render(request, 'sistema/crear_salida.html', {
+            'form': SalidaMercanciaForm,
+            "error": "Los datos no son validos" 
+            })
+@login_required
+def eliminar_salida(request, salida_id):
+    salida = get_object_or_404(SalidaMercancia, pk=salida_id)
+    salida.delete()
+    return redirect('salidas')
