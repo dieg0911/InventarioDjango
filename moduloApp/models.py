@@ -13,7 +13,7 @@ class Proveedor(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.nombre + ' ' + self.user.username
+        return self.nombre #+ ' ' + self.user.username
 
     
 class Sucursal(models.Model):
@@ -72,7 +72,7 @@ class EntradaMercancia(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -102,30 +102,14 @@ class SalidaMercancia(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.id)
-    
-    def save(self, *args, **kwargs):
-        is_new_entry = self.pk is None
 
-        super().save(*args, **kwargs)
 
-        if is_new_entry:
 
-            if self.mercancia.cantidad >= self.cantidad:
-                self.mercancia.sustraer_stock(self.cantidad)
-            else:
-                raise Exception("No hay suficiente stock")
-            
-    def delete(self, *args, **kwargs):
-        self.mercancia.agregar_stock(self.cantidad)
-        super().delete(*args, **kwargs)
-    
-
-    
 class Devolucion(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)

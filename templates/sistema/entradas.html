@@ -28,7 +28,10 @@ Registro Entrada
               <th>Proveedor</th>
               <th>Cantidad</th>
               <th>Fecha</th>
+              <th>Responsable</th>
+              {% if user.is_superuser %}
               <th>Acciones</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -37,28 +40,17 @@ Registro Entrada
                 <td>{{ entrada.mercancia }}</td>
                 <td>{{ entrada.proveedor }}</td>
                 <td>{{ entrada.cantidad }}</td>
-                <td>{{ entrada.fecha }}</td>
+                <td>{{ entrada.fecha|date:"d/m/Y H:i:s" }}</td>
+                <td>{{ entrada.user }}</td>
+              {% if user.is_superuser %}
               <td>
-                {% if entrada.activo %}
-                <!-- Proveedor activo -->
-                <a href="{% url 'detalle_entrada' entrada.id %}" class="btn btn-success">
-                  <span class="icon text-white-50">
-                    <i class="fas fa-edit"></i>
-                  </span>
-                  <span class="text">Editar</span>
-                </a>
-                <a href="{% url 'desactivar_entrada' entrada.id %}" class="btn btn-danger">
-                  Borrar
-                  <i class="fas fa-trash-alt"></i>
-                </a>
-                {% else %}
                 <!-- Proveedor eliminado -->
                 <a href="{% url 'eliminar_entrada' entrada.id %}" class="btn btn-primary">
                   Reingresar
                   <i class="fas fa-undo"></i>
                 </a>
-                {% endif %}
               </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>

@@ -414,17 +414,22 @@ def crear_salida(request):
             'form': SalidaMercanciaForm()
         })
     else:
-        try:
-            form_salida = SalidaMercanciaForm(request.POST)
+        form_salida = SalidaMercanciaForm(request.POST)
+        if form_salida.is_valid():
             new_salida = form_salida.save(commit=False)
             new_salida.user = request.user
-            new_salida.save()
-            print(new_salida)
-            return redirect('salidas')
-        except ValueError:
-           return render(request, 'sistema/crear_salida.html', {
-            'form': SalidaMercanciaForm,
-            "error": "Los datos no son validos" 
+            cantidad = form_salida.cleaned_data['cantidad']
+            mercancia = form_salida.cleaned_data['mercancia']
+            if mercancia.cantidad >= cantidad:
+                new_salida.save()
+                mercancia.sustraer_stock(cantidad)
+                return redirect('salidas')
+            else:
+                form_salida.add_error('cantidad', 'No hay suficiente stock disponible.')
+        else:
+            return render(request, 'sistema/crear_salida.html', {
+                'form': form_salida,
+                'error': "Los datos no son válidos"
             })
 @login_required
 def eliminar_salida(request, salida_id):

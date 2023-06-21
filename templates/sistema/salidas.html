@@ -28,7 +28,10 @@ Registro Salida
               <th>Sucursal</th>
               <th>Cantidad</th>
               <th>Fecha</th>
+              <th>Responsable</th>
+              {% if user.is_superuser %}
               <th>Acciones</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -37,28 +40,17 @@ Registro Salida
               <td>{{ salida.mercancia }}</td>
               <td>{{ salida.sucursal }}</td>
               <td>{{ salida.cantidad }}</td>
-              <td>{{ salida.fecha }}</td>
+              <td>{{ salida.fecha|date:"d/m/Y H:i:s" }}</td>
+              <td>{{ salida.user }}</td>
+              {% if user.is_superuser %}
               <td>
-                {% if salida.activo %}
-                <!-- Proveedor activo -->
-                <a href="{% url 'detalle_salida' salida.id %}" class="btn btn-success">
-                  <span class="icon text-white-50">
-                    <i class="fas fa-edit"></i>
-                  </span>
-                  <span class="text">Editar</span>
-                </a>
-                <a href="{% url 'desactivar_salida' salida.id %}" class="btn btn-danger">
-                  Borrar
-                  <i class="fas fa-trash-alt"></i>
-                </a>
-                {% else %}
                 <!-- Proveedor eliminado -->
                 <a href="{% url 'eliminar_salida' salida.id %}" class="btn btn-primary">
                   Reingresar
                   <i class="fas fa-undo"></i>
                 </a>
-                {% endif %}
               </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>

@@ -6,11 +6,12 @@ Crear Salida
 
 {% block contenido %}
   <h1 class="h3 mb-2 text-gray-800">Crear Salida</h1>
-
+  {% if error %}
+  <p class="text-danger">{{ error }}</p>
+  {% endif %}
   <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Guardar</button>
   </form>
 {% endblock contenido %}
-

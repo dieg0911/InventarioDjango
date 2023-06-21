@@ -32,6 +32,16 @@ class SalidaMercanciaForm(forms.ModelForm):
         model = SalidaMercancia
         fields = ['mercancia', 'sucursal', 'cantidad']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        mercancia = cleaned_data.get('mercancia')
+        cantidad = cleaned_data.get('cantidad')
+
+        if mercancia and cantidad:
+            if cantidad > mercancia.cantidad:
+                self.add_error('cantidad', 'No hay suficiente stock disponible, solo hay {} unidades disponibles'.format(mercancia.cantidad))
+
+        return cleaned_data
 
 class DevolucionForm(forms.ModelForm):
     class Meta:
