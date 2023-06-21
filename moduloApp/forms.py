@@ -32,7 +32,15 @@ class SalidaMercanciaForm(forms.ModelForm):
         model = SalidaMercancia
         fields = ['mercancia', 'sucursal', 'cantidad']
 
+class DevolucionForm(forms.ModelForm):
+    class Meta:
+        model = SalidaMercancia
+        fields = ['mercancia', 'sucursal', 'cantidad']
+    
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
         fields = ['nombre', 'descripcion']
+
+class RegistroCantidadForm(forms.Form):
+    cantidad = forms.IntegerField(label='Cantidad', min_value=1)

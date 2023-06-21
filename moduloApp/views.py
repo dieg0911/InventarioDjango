@@ -3,8 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm
-from .models import Proveedor, Sucursal, Mercancia, Categoria
+from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm, EntradaMercanciaForm, SalidaMercanciaForm, DevolucionForm, RegistroCantidadForm
+from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, RegistroCantidad
 from django.contrib.auth.decorators import login_required
 
 
@@ -341,3 +341,94 @@ def reingresar_categoria(request, categoria_id):
     categoria.activo = True
     categoria.save()
     return redirect('categorias')
+
+#registro cantidad de mercancia
+@login_required
+def registro_cantidad(request):
+    if request.method == 'POST':
+        form = RegistroCantidadForm(request.POST)
+        if form.is_valid():
+            registro = form.save()
+            registro.mercancia.agregar_stock(registro.cantidad) 
+
+
+#entrada y salida de mercancia
+@login_required
+def entradas(request):
+    entradas = EntradaMercancia.objects.all()
+    return render(request, 'sistema/entradas.html', {'entradas': entradas})
+@login_required
+def crear_entrada(request):
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_entrada.html', {
+            'form': EntradaMercanciaForm()
+        })
+    else:
+        try:
+            form_entrada = EntradaMercanciaForm(request.POST)
+            new_entrada = form_entrada.save(commit=False)
+            new_entrada.user = request.user
+            new_entrada.save()
+            print(new_entrada)
+            return redirect('entradas')
+        except ValueError:
+           return render(request, 'sistema/crear_entrada.html', {
+            'form': EntradaMercanciaForm,
+            "error": "Los datos no son validos" 
+            })
+
+
+# @login_required
+# def detalle_entrada(request, entrada_id):
+#     if request.method == 'GET':
+#         entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
+#         form_entrada = EntradaMercanciaForm(instance=entrada)
+#         return render(request, 'sistema/detalle_entrada.html', {'entrada': entrada, 'form': form_entrada})
+#     else:
+#         try:
+#             entrada = get_object_or_404(EntradaMercancia, pk=entrada_id,)
+#             form = EntradaMercanciaForm(request.POST, instance=entrada)
+#             form.save()
+#             return redirect('entradas')
+#         except ValueError:
+#             return render(request, 'sistema/detalle_entrada.html', {'entrada': entrada, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta entrada'
+#             })
+@login_required
+def eliminar_entrada(request, entrada_id):
+    entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
+    entrada.delete()
+    return redirect('entradas')
+# @login_required
+# def desactivar_entrada(request, entrada_id):
+#     entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
+#     entrada.activo = False
+#     entrada.save()
+#     return redirect('entradas')
+# @login_required
+# def entradas_inactivas(request):
+#     entradas = EntradaMercancia.objects.filter(activo=False)
+#     return render(request, 'sistema/entradas_inactivas.html', {'entradas': entradas})
+# @login_required
+# def reingresar_entrada(request, entrada_id):
+#     entrada = get_object_or_404(EntradaMercancia, id=entrada_id)
+#     entrada.activo = True
+#     entrada.save()
+#     return redirect('entradas')
+
+
+
+@login_required
+def salidas(request):
+    salidas = SalidaMercancia.objects.all()
+    return render(request, 'sistema/salidas.html', {'salidas': salidas})
+@login_required
+def crear_salida(request):
+    if request.method == 'POST':
+        form = SalidaMercanciaForm(request.POST)
+        if form.is_valid():
+            salida = form.save()
+            return redirect('ruta-a-redirigir')  # Reemplaza 'ruta-a-redirigir' por la URL a la que deseas redirigir después de crear la salida
+    else:
+        form = SalidaMercanciaForm()
+    
+    return render(request, 'crear_salida.html', {'form': form})

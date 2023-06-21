@@ -1,0 +1,15 @@
+{% extends "sistema/base.html" %}
+
+{% block title %}
+Crear Entrada
+{% endblock title %}
+
+{% block contenido %}
+  <h1 class="h3 mb-2 text-gray-800">Crear Entrada</h1>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+{% endblock contenido %}
