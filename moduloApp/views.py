@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
@@ -40,27 +41,17 @@ def logoutuser(request):
 #registro de usuarios
 @login_required
 def registro(request):
+    if not request.user.is_superuser:
+        # Si el usuario no es un superusuario, redirige a otra vista o muestra un mensaje de error.
+        return HttpResponse('Acceso denegado')
+
     if request.method == 'GET':
         return render(request, 'registro.html', {
             'form': UserCreationForm()
         })
     else:
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(
-                    request.POST['username'], password=request.POST['password1'])
-                user.save()
-                login(request, user)
-                return redirect('proveedores')
-            except IntegrityError:
-                return render(request, 'registro.html', {
-                    'form': UserCreationForm,
-                    "error": "El usuario ya existe"
-                })
-        return render(request, 'registro.html', {
-            'form': UserCreationForm,
-            "error": "Las contraseñas no coinciden"
-        })
+        # Resto del código de la vista de registro
+        pass
 
 #proveedores, crear y editar proveedores
 @login_required

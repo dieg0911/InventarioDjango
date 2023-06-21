@@ -12,7 +12,7 @@ Registro Entrada
 <div class="container-fluid">
   <div>
     <p>
-      <a href="/entradas/crear/" class="btn btn-info">Agregar</a>
+      <a href="/salidas/crear/" class="btn btn-info">Agregar</a>
       {% comment %} <a href="{% url 'entradas_inactivas' %}" class="btn btn-info">Reingresar</a> {% endcomment %}
     </p>
   </div>
@@ -32,28 +32,28 @@ Registro Entrada
             </tr>
           </thead>
           <tbody>
-            {% for entrada in entradas %}
+            {% for salida in entradas %}
             <tr>
-                <td>{{ entrada.mercancia }}</td>
-                <td>{{ entrada.proveedor }}</td>
-                <td>{{ entrada.cantidad }}</td>
-                <td>{{ entrada.fecha }}</td>
+                <td>{{ salida.mercancia }}</td>
+                <td>{{ salida.proveedor }}</td>
+                <td>{{ salida.cantidad }}</td>
+                <td>{{ salida.fecha }}</td>
               <td>
-                {% if entrada.activo %}
+                {% if salida.activo %}
                 <!-- Proveedor activo -->
-                <a href="{% url 'detalle_entrada' entrada.id %}" class="btn btn-success">
+                <a href="{% url 'detalle_entrada' salida.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
                 </a>
-                <a href="{% url 'desactivar_entrada' entrada.id %}" class="btn btn-danger">
+                <a href="{% url 'desactivar_entrada' salida.id %}" class="btn btn-danger">
                   Borrar
                   <i class="fas fa-trash-alt"></i>
                 </a>
                 {% else %}
                 <!-- Proveedor eliminado -->
-                <a href="{% url 'eliminar_entrada' entrada.id %}" class="btn btn-primary">
+                <a href="{% url 'eliminar_entrada' salida.id %}" class="btn btn-primary">
                   Reingresar
                   <i class="fas fa-undo"></i>
                 </a>
