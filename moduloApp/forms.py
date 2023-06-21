@@ -18,9 +18,19 @@ class SucursalForm(forms.ModelForm):
         fields = ['nombre', 'direccion', 'telefono', 'responsable']
 
 class MercanciaForm(forms.ModelForm):
+    categoria = forms.ModelChoiceField(queryset=Categoria.objects.filter(activo=True))
+
     class Meta:
         model = Mercancia
-        fields = ['nombre', 'codigo', 'valor_unitario', 'categoria']
+        fields = ['categoria', 'codigo', 'nombre', 'valor_unitario']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Resto del código de validación si es necesario
+        return cleaned_data
+
+
+
 
 class EntradaMercanciaForm(forms.ModelForm):
     class Meta:
