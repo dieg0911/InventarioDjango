@@ -62,7 +62,23 @@ urlpatterns = [
     path('categorias/reingresar/<int:categoria_id>/', reingresar_categoria, name='reingresar_categoria'),
     path('categorias/desactivar/<int:categoria_id>/', desactivar_categoria, name='desactivar_categoria'),
 
-    #salidas
-    #path('salidas/', salidas, name='salidas'),
-]
+    #entradas
+    path('entradas/', entradas, name='entradas'),
+    path('entradas/crear/', crear_entrada, name='crear_entrada'),
+    # path('entradas/<int:entrada_id>/', detalle_entrada, name='detalle_entrada'),
+    path('entradas/eliminar/<int:entrada_id>', eliminar_entrada, name='eliminar_entrada'),
+    # path('entradas/inactivos/', entradas_inactivas, name='entradas_inactivas'),
+    # path('entradas/reingresar/<int:entrada_id>/', reingresar_entrada, name='reingresar_entrada'),
+    # path('entradas/desactivar/<int:entrada_id>/', desactivar_entrada, name='desactivar_entrada'),
+    
 
+    #salidas
+    path('salidas/', salidas, name='salidas'),
+    path('salidas/crear/', crear_salida, name='crear_salida'),
+    # path('salidas/<int:salida_id>/', detalle_salida, name='detalle_salida'),
+    path('salidas/eliminar/<int:salida_id>', eliminar_salida, name='eliminar_salida'),
+    #path('salidas/', salidas, name='salidas'),
+
+ 
+
+]

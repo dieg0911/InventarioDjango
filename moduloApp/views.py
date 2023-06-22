@@ -1,10 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm
-from .models import Proveedor, Sucursal, Mercancia, Categoria
+from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm, EntradaMercanciaForm, SalidaMercanciaForm, DevolucionForm, RegistroCantidadForm
+from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, RegistroEntrada, RegistroSalida
 from django.contrib.auth.decorators import login_required
 
 
@@ -40,27 +41,33 @@ def logoutuser(request):
 #registro de usuarios
 @login_required
 def registro(request):
+    if not request.user.is_superuser:
+        # Si el usuario no es un superusuario, redirige a otra vista o muestra un mensaje de error.
+        return HttpResponse('Acceso denegado')
+
     if request.method == 'GET':
         return render(request, 'registro.html', {
             'form': UserCreationForm()
         })
+    elif request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # Crear el usuario pero no guardarlo todavía
+            user = form.save(commit=False)
+            
+            # Personalizar cualquier campo adicional del usuario si es necesario
+            user.custom_field = 'valor_personalizado'
+
+            # Guardar el usuario en la base de datos
+            user.save()
+
+            return redirect('home')
+        else:
+            return render(request, 'registro.html', {
+                'form': form
+            })
     else:
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(
-                    request.POST['username'], password=request.POST['password1'])
-                user.save()
-                login(request, user)
-                return redirect('proveedores')
-            except IntegrityError:
-                return render(request, 'registro.html', {
-                    'form': UserCreationForm,
-                    "error": "El usuario ya existe"
-                })
-        return render(request, 'registro.html', {
-            'form': UserCreationForm,
-            "error": "Las contraseñas no coinciden"
-        })
+        return HttpResponse('Método de solicitud no válido')
 
 #proveedores, crear y editar proveedores
 @login_required
@@ -278,8 +285,8 @@ def reingresar_mercancia(request, mercancia_id):
 #categorias crear y editar categorias
 @login_required
 def categorias(request):
-    Categoria.objects.all()
-    return render(request, 'sistema/categorias.html', {'categorias': Categoria.objects.all()})
+    categorias = Categoria.objects.filter(activo = True)  # Obtener todas las categorias, tanto activas como inactivas
+    return render(request, 'sistema/categorias.html', {'categorias': categorias})
 #crear categoria
 @login_required
 def crear_categoria(request):
@@ -342,4 +349,107 @@ def reingresar_categoria(request, categoria_id):
     categoria.save()
     return redirect('categorias')
 
-#
+#registro cantidad de mercancia
+@login_required
+def registro_cantidad(request):
+    if request.method == 'POST':
+        form = RegistroCantidadForm(request.POST)
+        if form.is_valid():
+            registro = form.save()
+            registro.mercancia.agregar_stock(registro.cantidad) 
+    
+#entrada y salida de mercancia
+@login_required
+def entradas(request):
+    entradas = EntradaMercancia.objects.all()
+    return render(request, 'sistema/entradas.html', {'entradas': entradas})
+@login_required
+def crear_entrada(request):
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_entrada.html', {
+            'form': EntradaMercanciaForm()
+        })
+    else:
+        try:
+            form_entrada = EntradaMercanciaForm(request.POST)
+            new_entrada = form_entrada.save(commit=False)
+            new_entrada.user = request.user
+            new_entrada.save()
+            print(new_entrada)
+            return redirect('entradas')
+        except ValueError:
+           return render(request, 'sistema/crear_entrada.html', {
+            'form': EntradaMercanciaForm,
+            "error": "Los datos no son validos" 
+            })
+# @login_required
+# def detalle_entrada(request, entrada_id):
+#     if request.method == 'GET':
+#         entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
+#         form_entrada = EntradaMercanciaForm(instance=entrada)
+#         return render(request, 'sistema/detalle_entrada.html', {'entrada': entrada, 'form': form_entrada})
+#     else:
+#         try:
+#             entrada = get_object_or_404(EntradaMercancia, pk=entrada_id,)
+#             form = EntradaMercanciaForm(request.POST, instance=entrada)
+#             form.save()
+#             return redirect('entradas')
+#         except ValueError:
+#             return render(request, 'sistema/detalle_entrada.html', {'entrada': entrada, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta entrada'
+#             })
+@login_required
+def eliminar_entrada(request, entrada_id):
+    entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
+    entrada.delete()
+    return redirect('entradas')
+# @login_required
+# def desactivar_entrada(request, entrada_id):
+#     entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
+#     entrada.activo = False
+#     entrada.save()
+#     return redirect('entradas')
+# @login_required
+# def entradas_inactivas(request):
+#     entradas = EntradaMercancia.objects.filter(activo=False)
+#     return render(request, 'sistema/entradas_inactivas.html', {'entradas': entradas})
+# @login_required
+# def reingresar_entrada(request, entrada_id):
+#     entrada = get_object_or_404(EntradaMercancia, id=entrada_id)
+#     entrada.activo = True
+#     entrada.save()
+#     return redirect('entradas')
+
+@login_required
+def salidas(request):
+    salidas = SalidaMercancia.objects.all()
+    return render(request, 'sistema/salidas.html', {'salidas': salidas})
+@login_required
+def crear_salida(request):
+    if request.method == 'GET':
+        return render(request, 'sistema/crear_salida.html', {
+            'form': SalidaMercanciaForm()
+        })
+    else:
+        form_salida = SalidaMercanciaForm(request.POST)
+        if form_salida.is_valid():
+            new_salida = form_salida.save(commit=False)
+            new_salida.user = request.user
+            cantidad = form_salida.cleaned_data['cantidad']
+            mercancia = form_salida.cleaned_data['mercancia']
+            if mercancia.cantidad >= cantidad:
+                new_salida.save()
+                mercancia.sustraer_stock(cantidad)
+                return redirect('salidas')
+            else:
+                form_salida.add_error('cantidad', 'No hay suficiente stock disponible.')
+        else:
+            return render(request, 'sistema/crear_salida.html', {
+                'form': form_salida,
+                'error': "Los datos no son válidos"
+            })
+@login_required
+def eliminar_salida(request, salida_id):
+    salida = get_object_or_404(SalidaMercancia, pk=salida_id)
+    salida.delete()
+    return redirect('salidas')
+

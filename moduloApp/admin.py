@@ -1,5 +1,5 @@
 from django.contrib import admin
-from moduloApp.models import Proveedor
+from moduloApp.models import *
 
 
 
@@ -7,3 +7,11 @@ from moduloApp.models import Proveedor
 # Register your models here.
 
 admin.site.register(Proveedor)
+admin.site.register(Sucursal)
+admin.site.register(Mercancia)
+admin.site.register(Categoria)
+admin.site.register(EntradaMercancia)
+admin.site.register(SalidaMercancia)
+admin.site.register(RegistroEntrada)
+admin.site.register(RegistroSalida)
+

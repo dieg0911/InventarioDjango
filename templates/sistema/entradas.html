@@ -1,0 +1,63 @@
+{% extends "sistema/base.html" %}
+
+{% block title %}
+Registro Entrada
+{% endblock title %}
+
+{% block contenido %}
+<h1 class="h3 mb-2 text-gray-800">Registro Entrada</h1>
+
+</br>
+
+<div class="container-fluid">
+  <div>
+    <p>
+      <a href="/entradas/crear/" class="btn btn-info">Agregar</a>
+      {% comment %} <a href="{% url 'entradas_inactivas' %}" class="btn btn-info">Reingresar</a> {% endcomment %}
+    </p>
+  </div>
+  
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered tabla-datatable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Mercancia</th>
+              <th>Proveedor</th>
+              <th>Cantidad</th>
+              <th>Fecha</th>
+              <th>Responsable</th>
+              {% if user.is_superuser %}
+              <th>Acciones</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for entrada in entradas %}
+            <tr>
+                <td>{{ entrada.mercancia }}</td>
+                <td>{{ entrada.proveedor }}</td>
+                <td>{{ entrada.cantidad }}</td>
+                <td>{{ entrada.fecha|date:"d/m/Y H:i:s" }}</td>
+                <td>{{ entrada.user }}</td>
+              {% if user.is_superuser %}
+              <td>
+                <!-- Proveedor eliminado -->
+                <a href="{% url 'eliminar_entrada' entrada.id %}" class="btn btn-primary">
+                  Reingresar
+                  <i class="fas fa-undo"></i>
+                </a>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock contenido %}

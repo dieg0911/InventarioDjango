@@ -12,10 +12,8 @@ Registro Categoria
 <div class="container-fluid">
   <div>
     <p>
-      <a href="/mercancias/crear/" class="btn btn-info">Agregar</a>
       <a href="/categorias/crear/" class="btn btn-info">Agregar Categoría</a>
-      <a href="/stock/crear/{{ mercancia.id }}/" class="btn btn-info">Agregar Stock</a>
-      <a href="/categorias/reingresar/" class="btn btn-info ml-auto">Reingresar</a>
+      <a href="/categorias/inactivos/" class="btn btn-info ml-auto">Reingresar</a>
     </p>
   </div>
 
@@ -36,15 +34,25 @@ Registro Categoria
               <td>{{ categoria.nombre }}</td>
               <td>{{ categoria.descripcion }}</td>
               <td>
+                {% if categoria.activo %}
+                <!-- Proveedor activo -->
                 <a href="{% url 'detalle_categoria' categoria.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
                 </a>
-                <a href="{% url 'eliminar_categoria' categoria.id %}" class="btn btn-danger">Borrar
+                <a href="{% url 'desactivar_categoria' categoria.id %}" class="btn btn-danger">
+                  Borrar
                   <i class="fas fa-trash-alt"></i>
                 </a>
+                {% else %}
+                <!-- Proveedor eliminado -->
+                <a href="{% url 'reingresar_categoria' categoria.id %}" class="btn btn-primary">
+                  Reingresar
+                  <i class="fas fa-undo"></i>
+                </a>
+                {% endif %}
               </td>
             </tr>
             {% endfor %}
