@@ -113,7 +113,7 @@ class SalidaMercancia(models.Model):
 class Devolucion(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField()
+    cantidad = models.PositiveIntegerField()    
     fecha = models.DateField(auto_now_add=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 

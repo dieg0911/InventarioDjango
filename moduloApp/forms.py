@@ -29,9 +29,6 @@ class MercanciaForm(forms.ModelForm):
         # Resto del código de validación si es necesario
         return cleaned_data
 
-
-
-
 class EntradaMercanciaForm(forms.ModelForm):
     class Meta:
         model = EntradaMercancia
@@ -64,4 +61,9 @@ class CategoriaForm(forms.ModelForm):
         fields = ['nombre', 'descripcion']
 
 class RegistroCantidadForm(forms.Form):
+    cantidad = forms.IntegerField(label='Cantidad', min_value=1)
+
+class RegistroEntradaForm(forms.Form):
+    mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))
+    proveedor = forms.ModelChoiceField(queryset=Proveedor.objects.filter(activo=True))
     cantidad = forms.IntegerField(label='Cantidad', min_value=1)

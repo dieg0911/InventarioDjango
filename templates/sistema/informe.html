@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Informe de Entradas y Salidas
+{% endblock title %}
+
+{% block contenido %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1>Informe de Entradas y Salidas</h1>
+      <hr>
+      <h2>Entradas:</h2>
+      <table class="tabla-datatable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Mercancía</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entrada in entradas %}
+          <tr>
+            <td>{{ entrada.id }}</td>
+            <td>{{ entrada.mercancia }}</td>
+            <td>{{ entrada.cantidad }}</td>
+            <td>{{ entrada.fecha }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <h2>Salidas:</h2>
+      <table class="tabla-datatable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Mercancía</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for salida in salidas %}
+          <tr>
+            <td>{{ salida.id }}</td>
+            <td>{{ salida.mercancia }}</td>
+            <td>{{ salida.cantidad }}</td>
+            <td>{{ salida.fecha }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock contenido %}

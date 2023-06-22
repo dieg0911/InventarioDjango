@@ -49,9 +49,25 @@ def registro(request):
         return render(request, 'registro.html', {
             'form': UserCreationForm()
         })
+    elif request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # Crear el usuario pero no guardarlo todavía
+            user = form.save(commit=False)
+            
+            # Personalizar cualquier campo adicional del usuario si es necesario
+            user.custom_field = 'valor_personalizado'
+
+            # Guardar el usuario en la base de datos
+            user.save()
+
+            return redirect('home')
+        else:
+            return render(request, 'registro.html', {
+                'form': form
+            })
     else:
-        # Resto del código de la vista de registro
-        pass
+        return HttpResponse('Método de solicitud no válido')
 
 #proveedores, crear y editar proveedores
 @login_required
@@ -436,3 +452,4 @@ def eliminar_salida(request, salida_id):
     salida = get_object_or_404(SalidaMercancia, pk=salida_id)
     salida.delete()
     return redirect('salidas')
+
