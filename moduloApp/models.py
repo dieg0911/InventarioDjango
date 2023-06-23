@@ -1,5 +1,6 @@
 from typing import Any, Dict, Tuple
 from django.db import models
+from django.db.models import Sum
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -47,6 +48,9 @@ class Mercancia(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    def total_cantidad_salidas(self):
+        return self.salidamercancia_set.aggregate(total=Sum('cantidad'))['total'] or 0
     
     def agregar_stock(self, cantidad):
         cantidad_actual = self.cantidad
