@@ -379,16 +379,6 @@ def eliminar_entrada(request, entrada_id):
     entrada.delete()
     return redirect('entradas')
 
-#historial de entradas
-@login_required
-def historial_entradas(request):
-    entradas = HistorialEntrada.objects.all()
-    return render(request, 'sistema/historial_entradas.html', {'entradas': entradas})
-@login_required
-def eliminar_historial_entrada(request, historial_entrada_id):
-    entrada = get_object_or_404(HistorialEntrada, pk=historial_entrada_id)
-    entrada.delete()
-    return redirect('historial_entradas')
 
 #salidas de mercancia
 @login_required
@@ -433,6 +423,17 @@ def eliminar_salida(request, salida_id):
 
     salida.delete()
     return redirect('salidas')
+
+#historial de entradas
+@login_required
+def historial_entradas(request):
+    entradas = HistorialEntrada.objects.all()
+    return render(request, 'sistema/historial_entradas.html', {'entradas': entradas})
+@login_required
+def eliminar_historial_entrada(request, historial_entrada_id):
+    entrada = get_object_or_404(HistorialEntrada, pk=historial_entrada_id)
+    entrada.delete()
+    return redirect('historial_entradas')
 
 #historial de salidas
 @login_required

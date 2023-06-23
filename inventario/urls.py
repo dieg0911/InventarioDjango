@@ -65,23 +65,17 @@ urlpatterns = [
     #entradas
     path('entradas/', entradas, name='entradas'),
     path('entradas/crear/', crear_entrada, name='crear_entrada'),
-    # path('entradas/<int:entrada_id>/', detalle_entrada, name='detalle_entrada'),
     path('entradas/eliminar/<int:entrada_id>', eliminar_entrada, name='eliminar_entrada'),
-    # path('entradas/inactivos/', entradas_inactivas, name='entradas_inactivas'),
-    # path('entradas/reingresar/<int:entrada_id>/', reingresar_entrada, name='reingresar_entrada'),
-    # path('entradas/desactivar/<int:entrada_id>/', desactivar_entrada, name='desactivar_entrada'),
-    
-    #historial de entradas
+    #historial entradas
     path('historial_entradas/', historial_entradas, name='historial_entradas'),
-    # path('historial_entradas/crear/', crear_historial_entrada, name='crear_historial_entrada'),
-    # path('historial_entradas/<int:historial_entrada_id>/', detalle_historial_entrada, name='detalle_historial_entrada'),
     path('historial_entradas/eliminar/<int:historial_entrada_id>', eliminar_historial_entrada, name='eliminar_historial_entrada'),
     #salidas
     path('salidas/', salidas, name='salidas'),
     path('salidas/crear/', crear_salida, name='crear_salida'),
-    # path('salidas/<int:salida_id>/', detalle_salida, name='detalle_salida'),
     path('salidas/eliminar/<int:salida_id>', eliminar_salida, name='eliminar_salida'),
-    #path('salidas/', salidas, name='salidas'),
+    #historial salidas  
+    path('historial_salidas/', historial_salidas, name='historial_salidas'),
+    path('historial_salidas/eliminar/<int:historial_salida_id>', eliminar_historial_salida, name='eliminar_historial_salida'),
 
  
 

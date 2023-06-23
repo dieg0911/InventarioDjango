@@ -1,19 +1,19 @@
 {% extends "sistema/base.html" %}
 
 {% block title %}
-Registro Salida
+Historial de Salidas
 {% endblock title %}
 
 {% block contenido %}
-<h1 class="h3 mb-2 text-gray-800">Registro Salida</h1>
+<h1 class="h3 mb-2 text-gray-800">Historial de Salidas</h1>
 
 </br>
 
 <div class="container-fluid">
   <div>
     <p>
-      <a href="/salidas/crear/" class="btn btn-info">Sacar</a>
-      <a href="/historial_salidas" class="btn btn-primary">Historial</a>    
+        <a href="/salidas" class="btn btn-info">volver</a>
+      {% comment %} <a href="{% url 'entradas_inactivas' %}" class="btn btn-info">Reingresar</a> {% endcomment %}
     </p>
   </div>
   
@@ -25,10 +25,8 @@ Registro Salida
           <thead>
             <tr>
               <th>Mercancia</th>
-              <th>Sucursal</th>
               <th>Cantidad</th>
               <th>Fecha</th>
-              <th>Responsable</th>
               {% if user.is_superuser %}
               <th>Acciones</th>
               {% endif %}
@@ -38,27 +36,25 @@ Registro Salida
             {% for salida in salidas %}
             <tr>
               <td>{{ salida.mercancia }}</td>
-              <td>{{ salida.sucursal }}</td>
               <td>{{ salida.cantidad }}</td>
               <td>{{ salida.fecha|date:"d/m/Y H:i:s" }}</td>
-              <td>{{ salida.user }}</td>
-              {% if user.is_superuser %}
-              <td>
-                <!-- Proveedor eliminado -->
-                <a href="{% url 'eliminar_salida' salida.id %}" class="btn btn-primary">
-                  Reingresar
-                  <i class="fas fa-undo"></i>
-                </a>
-              </td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-          
-        </table>
-      </div>
+            {% if user.is_superuser %}
+            <td>
+              <!-- Proveedor eliminado -->
+              <a href="{% url 'eliminar_historial_salida' salida.id %}" class="btn btn-danger btn-circle btn-sm" title="Eliminar">
+                Reingresar
+                <i class="fas fa-undo"></i>
+              </a>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+</div>
 
 {% endblock contenido %}
+                
