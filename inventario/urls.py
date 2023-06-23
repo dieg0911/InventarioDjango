@@ -71,7 +71,11 @@ urlpatterns = [
     # path('entradas/reingresar/<int:entrada_id>/', reingresar_entrada, name='reingresar_entrada'),
     # path('entradas/desactivar/<int:entrada_id>/', desactivar_entrada, name='desactivar_entrada'),
     
-
+    #historial de entradas
+    path('historial_entradas/', historial_entradas, name='historial_entradas'),
+    # path('historial_entradas/crear/', crear_historial_entrada, name='crear_historial_entrada'),
+    # path('historial_entradas/<int:historial_entrada_id>/', detalle_historial_entrada, name='detalle_historial_entrada'),
+    path('historial_entradas/eliminar/<int:historial_entrada_id>', eliminar_historial_entrada, name='eliminar_historial_entrada'),
     #salidas
     path('salidas/', salidas, name='salidas'),
     path('salidas/crear/', crear_salida, name='crear_salida'),

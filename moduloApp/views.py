@@ -4,8 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm, EntradaMercanciaForm, SalidaMercanciaForm, DevolucionForm, RegistroCantidadForm
-from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, RegistroEntrada, RegistroSalida
+from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm, EntradaMercanciaForm, SalidaMercanciaForm
+from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, HistorialEntrada, RegistroSalida
 from django.contrib.auth.decorators import login_required
 
 
@@ -350,13 +350,13 @@ def reingresar_categoria(request, categoria_id):
     return redirect('categorias')
 
 #registro cantidad de mercancia
-@login_required
-def registro_cantidad(request):
-    if request.method == 'POST':
-        form = RegistroCantidadForm(request.POST)
-        if form.is_valid():
-            registro = form.save()
-            registro.mercancia.agregar_stock(registro.cantidad) 
+# @login_required
+# def registro_cantidad(request):
+#     if request.method == 'POST':
+#         form = RegistroCantidadForm(request.POST)
+#         if form.is_valid():
+#             registro = form.save()
+#             registro.mercancia.agregar_stock(registro.cantidad) 
     
 #entrada y salida de mercancia
 @login_required
@@ -382,43 +382,24 @@ def crear_entrada(request):
             'form': EntradaMercanciaForm,
             "error": "Los datos no son validos" 
             })
-# @login_required
-# def detalle_entrada(request, entrada_id):
-#     if request.method == 'GET':
-#         entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
-#         form_entrada = EntradaMercanciaForm(instance=entrada)
-#         return render(request, 'sistema/detalle_entrada.html', {'entrada': entrada, 'form': form_entrada})
-#     else:
-#         try:
-#             entrada = get_object_or_404(EntradaMercancia, pk=entrada_id,)
-#             form = EntradaMercanciaForm(request.POST, instance=entrada)
-#             form.save()
-#             return redirect('entradas')
-#         except ValueError:
-#             return render(request, 'sistema/detalle_entrada.html', {'entrada': entrada, 'form': form, 'error': 'Los datos no son validos', 'error': 'No se puede editar esta entrada'
-#             })
 @login_required
 def eliminar_entrada(request, entrada_id):
     entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
     entrada.delete()
     return redirect('entradas')
-# @login_required
-# def desactivar_entrada(request, entrada_id):
-#     entrada = get_object_or_404(EntradaMercancia, pk=entrada_id)
-#     entrada.activo = False
-#     entrada.save()
-#     return redirect('entradas')
-# @login_required
-# def entradas_inactivas(request):
-#     entradas = EntradaMercancia.objects.filter(activo=False)
-#     return render(request, 'sistema/entradas_inactivas.html', {'entradas': entradas})
-# @login_required
-# def reingresar_entrada(request, entrada_id):
-#     entrada = get_object_or_404(EntradaMercancia, id=entrada_id)
-#     entrada.activo = True
-#     entrada.save()
-#     return redirect('entradas')
 
+#historial de entradas
+@login_required
+def historial_entradas(request):
+    entradas = HistorialEntrada.objects.all()
+    return render(request, 'sistema/historial_entradas.html', {'entradas': entradas})
+@login_required
+def eliminar_historial_entrada(request, historial_entrada_id):
+    entrada = get_object_or_404(HistorialEntrada, pk=historial_entrada_id)
+    entrada.delete()
+    return redirect('historial_entradas')
+
+#salidas de mercancia
 @login_required
 def salidas(request):
     salidas = SalidaMercancia.objects.all()
@@ -430,26 +411,35 @@ def crear_salida(request):
             'form': SalidaMercanciaForm()
         })
     else:
-        form_salida = SalidaMercanciaForm(request.POST)
-        if form_salida.is_valid():
+        try:
+            form_salida = SalidaMercanciaForm(request.POST)
             new_salida = form_salida.save(commit=False)
-            new_salida.user = request.user
-            cantidad = form_salida.cleaned_data['cantidad']
-            mercancia = form_salida.cleaned_data['mercancia']
-            if mercancia.cantidad >= cantidad:
+
+            # Verificar si hay suficiente stock antes de guardar la salida
+            if new_salida.mercancia.sustraer_stock(new_salida.cantidad):
+                new_salida.user = request.user
                 new_salida.save()
-                mercancia.sustraer_stock(cantidad)
                 return redirect('salidas')
             else:
-                form_salida.add_error('cantidad', 'No hay suficiente stock disponible.')
-        else:
-            return render(request, 'sistema/crear_salida.html', {
-                'form': form_salida,
-                'error': "Los datos no son válidos"
+                return render(request, 'sistema/crear_salida.html', {
+                    'form': SalidaMercanciaForm(),
+                    "error": "No hay suficiente stock disponible"
+                })
+        except ValueError:
+           return render(request, 'sistema/crear_salida.html', {
+            'form': SalidaMercanciaForm,
+            "error": "Los datos no son válidos" 
             })
 @login_required
 def eliminar_salida(request, salida_id):
     salida = get_object_or_404(SalidaMercancia, pk=salida_id)
+
+    # Restaurar la cantidad de mercancía al eliminar la salida
+    cantidad_restaurar = salida.cantidad
+    mercancia = salida.mercancia
+    mercancia.cantidad += cantidad_restaurar
+    mercancia.save()
+
     salida.delete()
     return redirect('salidas')
 

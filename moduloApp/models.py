@@ -52,21 +52,29 @@ class Mercancia(models.Model):
         cantidad_actual = self.cantidad
         self.cantidad = cantidad_actual + int(cantidad)  # Sumar la cantidad ingresada al valor actual
         self.save()
-        RegistroEntrada.objects.create(mercancia=self, cantidad=cantidad)
+        HistorialEntrada.objects.create(mercancia=self, cantidad=cantidad)
 
     def sustraer_stock(self, cantidad):
         if self.cantidad >= cantidad:
             self.cantidad -= cantidad
             self.save()
             RegistroSalida.objects.create(mercancia=self, cantidad=cantidad)
+            
+            return True  # Agregar esta línea para indicar que la sustracción se realizó correctamente
+        else:
+            return False  # Agregar esta línea para indicar que no hay suficiente stock
 
-class RegistroEntrada(models.Model):
+        return False 
+
+class HistorialEntrada(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
+    # Proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Registro de Entrada {self.id} - {self.mercancia.nombre}"
+        return f"Historial de Entrada {self.id} - {self.mercancia.nombre}"
+
     
 class EntradaMercancia(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)

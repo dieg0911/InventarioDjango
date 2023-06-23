@@ -60,8 +60,8 @@ class CategoriaForm(forms.ModelForm):
         model = Categoria
         fields = ['nombre', 'descripcion']
 
-class RegistroCantidadForm(forms.Form):
-    cantidad = forms.IntegerField(label='Cantidad', min_value=1)
+# class RegistroCantidadForm(forms.Form):
+#     cantidad = forms.IntegerField(label='Cantidad', min_value=1)
 
 class RegistroEntradaForm(forms.Form):
     mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))

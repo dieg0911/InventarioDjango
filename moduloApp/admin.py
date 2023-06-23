@@ -12,6 +12,6 @@ admin.site.register(Mercancia)
 admin.site.register(Categoria)
 admin.site.register(EntradaMercancia)
 admin.site.register(SalidaMercancia)
-admin.site.register(RegistroEntrada)
+admin.site.register(HistorialEntrada)
 admin.site.register(RegistroSalida)
 
