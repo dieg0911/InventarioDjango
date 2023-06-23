@@ -16,6 +16,13 @@ class SucursalForm(forms.ModelForm):
     class Meta:
         model = Sucursal
         fields = ['nombre', 'direccion', 'telefono', 'responsable']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dirección'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Teléfono'}),
+            'responsable': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Responsable'}),
+        }
+
 
 class MercanciaForm(forms.ModelForm):
     categoria = forms.ModelChoiceField(queryset=Categoria.objects.filter(activo=True))
@@ -67,3 +74,9 @@ class RegistroEntradaForm(forms.Form):
     mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))
     proveedor = forms.ModelChoiceField(queryset=Proveedor.objects.filter(activo=True))
     cantidad = forms.IntegerField(label='Cantidad', min_value=1)
+
+class RegistroSalidaForm(forms.Form):
+    mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))
+    sucursal = forms.ModelChoiceField(queryset=Sucursal.objects.filter(activo=True))
+    cantidad = forms.IntegerField(label='Cantidad', min_value=1)
+    fecha = forms.DateField(label='Fecha', widget=forms.SelectDateWidget())
