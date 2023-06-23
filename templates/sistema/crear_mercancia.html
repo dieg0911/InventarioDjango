@@ -1,26 +1,53 @@
-{% extends "sistema/base.html"%}
+{% extends "sistema/base.html" %}
 
 {% block title %}
-Nueva Mercancia 
-{%endblock title%}
-
-
+Crear Mercancía
+{% endblock title %}
 
 {% block contenido %}
-<h1 class="display-1">Ingresar Mercancia</h1>
-
-
-<form action="/mercancias/crear/" method="POST">
-
-    {{error}}
-
-    {% csrf_token %}
-    {{form.as_p}}
-
-    <button type="submit" class="btn btn-primary">Crear</button>
-
-</form>
-
-
-
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-md-8 col-12">
+      <div class="card z-index-0 fadeIn3 fadeInBottom">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+            <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Crear Mercancía</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <form action="/mercancias/crear/" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_categoria">Categoría</label>
+              {{ form.categoria.errors }}
+              <select class="form-control bg-light" id="id_categoria" name="categoria" required>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="id_codigo">Código</label>
+              {{ form.codigo.errors }}
+              <input type="text" class="form-control bg-light" id="id_codigo" name="codigo" required>
+            </div>
+            <div class="form-group">
+              <label for="id_nombre">Nombre</label>
+              {{ form.nombre.errors }}
+              <input type="text" class="form-control bg-light" id="id_nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+              <label for="id_valor_unitario">Valor Unitario</label>
+              {{ form.valor_unitario.errors }}
+              <input type="number" class="form-control bg-light" id="id_valor_unitario" name="valor_unitario" required>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Crear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock contenido %}

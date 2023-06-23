@@ -58,7 +58,7 @@ class Mercancia(models.Model):
         if self.cantidad >= cantidad:
             self.cantidad -= cantidad
             self.save()
-            RegistroSalida.objects.create(mercancia=self, cantidad=cantidad)
+            HistorialSalida.objects.create(mercancia=self, cantidad=cantidad)
             
             return True  # Agregar esta línea para indicar que la sustracción se realizó correctamente
         else:
@@ -98,7 +98,7 @@ class EntradaMercancia(models.Model):
         self.mercancia.sustraer_stock(self.cantidad)
         super().delete(*args, **kwargs)
 
-class RegistroSalida(models.Model):
+class HistorialSalida(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     fecha = models.DateTimeField(auto_now_add=True)

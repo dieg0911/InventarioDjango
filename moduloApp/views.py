@@ -4,8 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import ProveedorForm, SucursalForm, MercanciaForm, CategoriaForm, EntradaMercanciaForm, SalidaMercanciaForm
-from .models import EntradaMercancia, Proveedor, Sucursal, Mercancia, Categoria, SalidaMercancia, Devolucion, HistorialEntrada, RegistroSalida
+from .forms import *
+from .models import *
 from django.contrib.auth.decorators import login_required
 
 
@@ -349,16 +349,7 @@ def reingresar_categoria(request, categoria_id):
     categoria.save()
     return redirect('categorias')
 
-#registro cantidad de mercancia
-# @login_required
-# def registro_cantidad(request):
-#     if request.method == 'POST':
-#         form = RegistroCantidadForm(request.POST)
-#         if form.is_valid():
-#             registro = form.save()
-#             registro.mercancia.agregar_stock(registro.cantidad) 
-    
-#entrada y salida de mercancia
+#entradas
 @login_required
 def entradas(request):
     entradas = EntradaMercancia.objects.all()
@@ -443,3 +434,13 @@ def eliminar_salida(request, salida_id):
     salida.delete()
     return redirect('salidas')
 
+#historial de salidas
+@login_required
+def historial_salidas(request):
+    salidas = HistorialSalida.objects.all()
+    return render(request, 'sistema/historial_salidas.html', {'salidas': salidas})
+@login_required
+def eliminar_historial_salida(request, historial_salida_id):
+    salida = get_object_or_404(HistorialSalida, pk=historial_salida_id)
+    salida.delete()
+    return redirect('historial_salidas')
