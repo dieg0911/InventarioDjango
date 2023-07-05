@@ -20,19 +20,18 @@ def home(request):
 #login y logout
 def loginuser(request):
     if request.method == 'GET':
-        return render(request, 'login.html', {
-            'form': AuthenticationForm()
-        })
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
     else:
-        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
-            return render(request, 'login.html', {
-                'form': AuthenticationForm(),
-                'error': 'Usuario y/o contraseña incorrectos'
-            })
-        else:
-            login(request, user)
-            return redirect('home')
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+        return render(request, 'login.html', {'form': form, 'error': 'Usuario y/o contraseña incorrectos'})
 
 def logoutuser(request):
         logout(request)
@@ -78,9 +77,7 @@ def proveedores(request):
 @login_required
 def crear_proveedor(request):
     if request.method == 'GET':
-        return render(request, 'sistema/crear_proveedor.html', {
-            'form': ProveedorForm()
-        })
+        return render(request, 'sistema/crear_proveedor.html', {'form': ProveedorForm()})
     else:
         try:
             form_proveedor = ProveedorForm(request.POST)
@@ -149,7 +146,7 @@ def sucursales(request):
     return render(request, 'sistema/sucursales.html', {'sucursales': sucursales})
 #crear sucursal
 @login_required
-def crear_sucursal(request):
+def crear_sucursal(request):    
     if request.method == 'GET':
         return render(request, 'sistema/crear_sucursal.html', {
             'form': SucursalForm()

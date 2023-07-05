@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from .models import Proveedor, Sucursal, Mercancia, EntradaMercancia, SalidaMercancia, Categoria
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username')
     password = forms.CharField(widget=forms.PasswordInput(), label='Password')
@@ -10,18 +11,28 @@ class LoginForm(forms.Form):
 class ProveedorForm(forms.ModelForm):
     class Meta:
         model = Proveedor
-        fields = ['codigo', 'nombre', 'direccion', 'telefono']
+        fields = ('codigo', 'nombre', 'direccion', 'telefono')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['codigo'].widget.attrs.update({'class': 'form-control'})
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control'})
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control'})
+        self.fields['telefono'].widget.attrs.update({'class': 'form-control'})
+
 
 class SucursalForm(forms.ModelForm):
     class Meta:
         model = Sucursal
-        fields = ['nombre', 'direccion', 'telefono', 'responsable']
-        widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
-            'direccion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dirección'}),
-            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Teléfono'}),
-            'responsable': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Responsable'}),
-        }
+        fields = ('nombre', 'direccion', 'telefono', 'responsable')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['nombre'].widget.attrs.update({'class': 'form-control'})
+        self.fields['direccion'].widget.attrs.update({'class': 'form-control'})
+        self.fields['telefono'].widget.attrs.update({'class': 'form-control'})
+        self.fields['responsable'].widget.attrs.update({'class': 'form-control'})
+
 
 
 class MercanciaForm(forms.ModelForm):

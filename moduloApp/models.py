@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+
 class Proveedor(models.Model):
     codigo = models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=100)
@@ -14,7 +15,7 @@ class Proveedor(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.nombre #+ ' ' + self.user.username
+        return self.nombre + ' | ' + self.user.username
 
     
 class Sucursal(models.Model):
@@ -119,8 +120,6 @@ class SalidaMercancia(models.Model):
 
     def __str__(self):
         return str(self.id)
-
-
 
 class Devolucion(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
