@@ -18,12 +18,14 @@ def index(request):
 def home(request):
     return render(request, 'sistema/basehome.html')
 #login y logout
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import CustomAuthenticationForm
+
 def loginuser(request):
     if request.method == 'GET':
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+        form = CustomAuthenticationForm()
     else:
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -31,7 +33,11 @@ def loginuser(request):
             if user is not None:
                 login(request, user)
                 return redirect('home')
-        return render(request, 'login.html', {'form': form, 'error': 'Usuario y/o contraseña incorrectos'})
+            else:
+                form.add_error(None, 'Usuario y/o contraseña incorrectos')  # Agregar error personalizado al formulario
+
+    return render(request, 'login.html', {'form': form})
+
 
 def logoutuser(request):
         logout(request)
@@ -46,10 +52,10 @@ def registro(request):
 
     if request.method == 'GET':
         return render(request, 'registro.html', {
-            'form': UserCreationForm()
+            'form': CustomUserCreationForm()
         })
     elif request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             # Crear el usuario pero no guardarlo todavía
             user = form.save(commit=False)

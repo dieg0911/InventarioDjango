@@ -8,16 +8,15 @@ from django.contrib.auth.models import User
 
 class Proveedor(models.Model):
     codigo = models.CharField(max_length=10, unique=True)
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
     direccion = models.CharField(max_length=200)
     telefono = models.CharField(max_length=20)
     activo = models.BooleanField(default=True)
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.nombre + ' | ' + self.user.username
+        return self.nombre #s+ ' | ' + self.user.username
 
-    
 class Sucursal(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -29,7 +28,6 @@ class Sucursal(models.Model):
     def __str__(self):
         return self.nombre
     
-
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
@@ -80,7 +78,6 @@ class HistorialEntrada(models.Model):
     def __str__(self):
         return f"Historial de Entrada {self.id} - {self.mercancia.nombre}"
 
-    
 class EntradaMercancia(models.Model):
     mercancia = models.ForeignKey(Mercancia, on_delete=models.CASCADE)
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)

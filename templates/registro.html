@@ -7,17 +7,95 @@ Registro
 
 
 {% block contenido %}
-<h1 class="display-1">Registro Empleado</h1>
+{% comment %} <h1 class="display-1">Registro Empleado</h1> {% endcomment %}
 
 {{error}}
 
-<form action="/registro/" method="post">
-
-{% csrf_token %}
-{{ form.as_p}}
-
-<button type="submit" class="btn btn-primary">Registrar</button>
-
-</form>
-
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-8 col-12">
+        <div class="card z-index-0 fadeIn3 fadeInBottom">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+              <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Registrar Empleado</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-label" for="{{ form.username.id_for_label }}">Nombre de usuario</label>
+                  {{ form.username }}
+                </div>
+                <div>
+                  {% if form.username.errors %}
+                    <ul class="errorlist">
+                      {% for error in form.username.errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                  <small>{{ form.username.help_text }}</small>
+                </div>
+                
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-label" for="{{ form.password1.id_for_label }}">Contraseña</label>
+                  {{ form.password1 }}
+                </div>
+                <div>
+                  {% if form.password1.errors %}
+                    <ul class="errorlist">
+                      {% for error in form.password1.errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                  <small>{{ form.password1.help_text }}</small>
+                </div>
+                
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-label" for="{{ form.password2.id_for_label }}">Contraseña (confirmación)</label>
+                  {{ form.password2 }}
+                </div>
+                <div>
+                  {% if form.password2.errors %}
+                    <ul class="errorlist">
+                      {% for error in form.password2.errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 {% endblock contenido %}
+
+
+
+{% comment %} <form method="POST">
+    {% csrf_token %}
+    <div class="input-group input-group-outline my-3">
+      <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+      {{ form.username }}
+    </div>
+    <div class="input-group input-group-outline my-3">
+      <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+      {{ form.password1 }}
+    </div>
+    <div class="input-group input-group-outline my-3">
+      <label class="form-label" for="{{ form.password2.id_for_label }}">Password confirmation</label>
+      {{ form.password2 }}
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+  </form> {% endcomment %}
