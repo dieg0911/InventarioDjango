@@ -154,5 +154,4 @@ class DevolucionMercancia(models.Model):
 
     def __str__(self):
         return str(self.id) + " - " + self.salida_mercancia.mercancia.nombre
-
-
+    

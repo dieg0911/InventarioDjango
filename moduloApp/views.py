@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from .forms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
+
 
 
 # Create your views here.
@@ -455,8 +457,6 @@ def eliminar_historial_salida(request, historial_salida_id):
 def devoluciones(request):
     devoluciones = DevolucionMercancia.objects.all()
     return render(request, 'sistema/devoluciones.html', {'devoluciones': devoluciones})
-
-@login_required
 @login_required
 def crear_devolucion(request):
     if request.method == 'POST':
@@ -486,6 +486,35 @@ def crear_devolucion(request):
         form = DevolucionMercanciaForm()
 
     return render(request, 'sistema/crear_devolucion.html', {'form': form})
+@login_required
+def deshacer_devolucion(request, devolucion_id):
+    devolucion = get_object_or_404(DevolucionMercancia, pk=devolucion_id)
+
+    # Restaurar la cantidad devuelta a la salida de mercancía
+    salida_mercancia = devolucion.salida_mercancia
+    salida_mercancia.cantidad += devolucion.cantidad_devuelta
+    salida_mercancia.save()
+
+    # Restar la cantidad devuelta de la mercancía
+    mercancia = salida_mercancia.mercancia
+    mercancia.cantidad -= devolucion.cantidad_devuelta
+    mercancia.save()
+
+    # Eliminar la devolución
+    devolucion.delete()
+
+    return redirect('devoluciones')
+
+# # historial de devoluciones
+# @login_required
+# def historial_devoluciones(request):
+#     devoluciones = DevolucionMercancia.objects.all()
+#     return render(request, 'sistema/historial_devoluciones.html', {'devoluciones': devoluciones})
+# @login_required
+# def eliminar_historial_devolucion(request, historial_devolucion_id):
+#     devolucion = get_object_or_404(HistorialDevolucion, pk=historial_devolucion_id)
+#     devolucion.delete()
+#     return redirect('historial_devoluciones')
 
 
 

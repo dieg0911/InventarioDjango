@@ -4,6 +4,10 @@
 {% load static %}
 
 <head>
+  {% block cache_directive %}
+  <meta http-equiv="cache-control" content="public, max-age=3600">
+  {% endblock cache_directive %}
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="{%static 'img/apple-icon.png'%}">

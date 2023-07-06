@@ -1,20 +1,21 @@
 {% extends "sistema/base.html" %}
 
 {% block title %}
-Registro Devoluciones
+Historial de Devoluciones
 {% endblock title %}
 
 {% block contenido %}
-<h1 class="h3 mb-2 text-gray-800">Registro Devoluciones</h1>
+<h1 class="h3 mb-2 text-gray-800">Historial de Devoluciones</h1>
 
 </br>
 
 <div class="container-fluid">
-    <div>
-        <p>
-          <a href="/devoluciones/crear/" class="btn btn-info">Ingresar Devolucion</a>
-          {% comment %} <a href="/historial_devoluciones/" class="btn btn-info">Historial Devoluciones</a> {% endcomment %}
-      </div>
+  <div>
+    <p>
+        <a href="/devoluciones" class="btn btn-info">volver</a>
+    </p>
+  </div>
+  
 
   <div class="card shadow mb-4">
     <div class="card-body">
@@ -22,13 +23,9 @@ Registro Devoluciones
         <table class="table table-bordered tabla-datatable" width="100%" cellspacing="0">
           <thead>
             <tr>
-              <th>ID Devolucion</th>  
-              <th>ID Salida</th>
-              <th>Mercancia</th>
-              <th>Sucursal</th>
+              <th>Salida</th>
               <th>Cantidad Devuelta</th>
               <th>Fecha</th>
-              <th>Responsable</th>
               {% if user.is_superuser %}
               <th>Acciones</th>
               {% endif %}
@@ -37,18 +34,13 @@ Registro Devoluciones
           <tbody>
             {% for devolucion in devoluciones %}
             <tr>
-              <td>{{ devolucion.id }}</td>
-              <td>{{ devolucion.salida_mercancia.id }}</td>
-              <td>{{ devolucion.salida_mercancia.mercancia.nombre }}</td>
-              <td>{{ devolucion.salida_mercancia.sucursal.nombre }}</td>
+              <td>{{ devolucion.salida_mercancia }}</td>
               <td>{{ devolucion.cantidad_devuelta }}</td>
               <td>{{ devolucion.fecha|date:"d/m/Y H:i:s" }}</td>
-              <td>{{ devolucion.user }}</td>
               {% if user.is_superuser %}
               <td>
-                <!-- Acciones adicionales si es necesario -->
-                <a href="{% url 'deshacer_devolucion' devolucion.id %}" class="btn btn-primary">
-                  Eliminar
+                <a href="{% url 'eliminar_historial_devolucion' devolucion.id %}" class="btn btn-danger btn-circle btn-sm" title="Deshacer Devolución">
+                  Deshacer
                   <i class="fas fa-undo"></i>
                 </a>
               </td>
