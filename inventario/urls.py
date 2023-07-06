@@ -84,4 +84,15 @@ urlpatterns = [
     #historial devoluciones
     # path('historial_devoluciones/', historial_devoluciones, name='historial_devoluciones'),
     # path('historial_devoluciones/eliminar/<int:historial_devolucion_id>', eliminar_historial_devolucion, name='eliminar_historial_devolucion'),
-]
+
+    #reportes
+    path('reporte_proveedores/', GenerarReporteProveedoresView.as_view(), name='reporte_proveedores'),
+    path('reporte_sucursales/', GenerarReporteSucursalesView.as_view(), name='reporte_sucursales'),
+    path('reporte_mercancias/', GenerarReporteMercanciasView.as_view(), name='reporte_mercancias'),
+    path('reporte_categorias/', GenerarReporteCategoriasView.as_view(), name='reporte_categorias'),
+    path('reporte_entradas/', GenerarReporteEntradasView.as_view(), name='reporte_entradas'),
+    path('reporte_salidas/', GenerarReporteSalidasView.as_view(), name='reporte_salidas'),
+    path('reporte_devoluciones/', GenerarReporteDevolucionesView.as_view(), name='reporte_devoluciones'),   
+    path('reporte_historial_entradas/', GenerarReporteHistorialEntradasView.as_view(), name='reporte_historial_entradas'),
+    path('reporte_historial_salidas/', GenerarReporteHistorialSalidasView.as_view(), name='reporte_historial_salidas'),
+    ]

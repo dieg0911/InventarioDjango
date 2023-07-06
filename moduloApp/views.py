@@ -8,6 +8,14 @@ from .forms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
+#modulos reportlab
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib import colors
+from django.views.generic import View
+from datetime import datetime
+
 
 
 
@@ -505,18 +513,438 @@ def deshacer_devolucion(request, devolucion_id):
 
     return redirect('devoluciones')
 
-# # historial de devoluciones
-# @login_required
-# def historial_devoluciones(request):
-#     devoluciones = DevolucionMercancia.objects.all()
-#     return render(request, 'sistema/historial_devoluciones.html', {'devoluciones': devoluciones})
-# @login_required
-# def eliminar_historial_devolucion(request, historial_devolucion_id):
-#     devolucion = get_object_or_404(HistorialDevolucion, pk=historial_devolucion_id)
-#     devolucion.delete()
-#     return redirect('historial_devoluciones')
+
+#reportes
+class GenerarReporteProveedoresView(View):
+    def get(self, request):
+        proveedores = Proveedor.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_proveedores.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Proveedores", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Código', 'Nombre', 'Dirección', 'Teléfono', 'Activo']]
+        for proveedor in proveedores:
+            data.append([proveedor.id, proveedor.codigo, proveedor.nombre, proveedor.direccion, proveedor.telefono, 'Sí' if proveedor.activo else 'No'])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
 
 
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+
+class GenerarReporteSucursalesView(View):
+    def get(self, request):
+        sucursales = Sucursal.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_sucursales.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Proveedores", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID','Nombre', 'Dirección', 'Teléfono', 'Responsable', 'Activo']]
+        for sucursal in sucursales:
+            data.append([sucursal.id, sucursal.nombre, sucursal.direccion, sucursal.telefono, sucursal.responsable, 'Sí' if sucursal.activo else 'No'])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
 
 
+        # Construir el documento PDF
+        doc.build(elements)
 
+        return response
+    
+class GenerarReporteMercanciasView(View):
+    def get(self, request):
+        mercancias = Mercancia.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_mercancias.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Mercancías", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Código', 'Nombre', 'Valor Unitario', 'Cantidad', 'Categoría', 'Activo']]
+        for mercancia in mercancias:
+            data.append([mercancia.id, mercancia.codigo, mercancia.nombre, mercancia.valor_unitario, mercancia.cantidad, mercancia.categoria.nombre, 'Sí' if mercancia.activo else 'No'])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+
+class GenerarReporteCategoriasView(View):
+    def get(self, request):
+        categorias = Categoria.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_categorias.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Categorías", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Nombre', 'Descripción', 'Activo']]
+        for categoria in categorias:
+            data.append([categoria.id, categoria.nombre, categoria.descripcion, 'Sí' if categoria.activo else 'No'])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+    
+class GenerarReporteEntradasView(View):
+    def get(self, request):
+        entradas = EntradaMercancia.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_entradas.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Entradas", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Mercancía', 'Proveedor', 'Cantidad', 'Fecha']]
+        for entrada in entradas:
+            data.append([entrada.id, entrada.mercancia.nombre, entrada.proveedor.nombre, entrada.cantidad, entrada.fecha])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+
+class GenerarReporteHistorialEntradasView(View):
+    def get(self, request):
+        historiales = HistorialEntrada.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_historial_entrada.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Historial de Entrada", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Mercancía', 'Cantidad', 'Fecha']]
+        for historial in historiales:
+            data.append([historial.id, historial.mercancia.nombre, historial.cantidad, historial.fecha.strftime('%Y-%m-%d %H:%M:%S')])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+    
+class GenerarReporteSalidasView(View):
+    def get(self, request):
+        salidas = SalidaMercancia.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_salidas.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Salidas de Mercancía", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Mercancía', 'Sucursal', 'Cantidad', 'Fecha']]
+        for salida in salidas:
+            data.append([salida.id, salida.mercancia.nombre, salida.sucursal.nombre, salida.cantidad, salida.fecha.strftime('%Y-%m-%d %H:%M:%S')])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+
+class GenerarReporteHistorialSalidasView(View):
+    def get(self, request):
+        historiales = HistorialSalida.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_historial_salida.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Historial de Salida de Mercancía", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Mercancía', 'Cantidad', 'Fecha']]
+        for historial in historiales:
+            data.append([historial.id, historial.mercancia.nombre, historial.cantidad, historial.fecha.strftime('%Y-%m-%d %H:%M:%S')])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
+
+class GenerarReporteDevolucionesView(View):
+    def get(self, request):
+        devoluciones = DevolucionMercancia.objects.all()
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="reporte_devoluciones.pdf"'
+
+        doc = SimpleDocTemplate(response, pagesize=landscape(letter))
+        elements = []
+
+        # Estilo del título
+        title_style = getSampleStyleSheet()['Title']
+        title = Paragraph("Reporte de Devoluciones de Mercancía", title_style)
+        elements.append(title)
+
+        # Estilo de la tabla
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ])
+
+        # Datos de la tabla
+        data = [['ID', 'Salida de Mercancía', 'Cantidad Devuelta', 'Fecha']]
+        for devolucion in devoluciones:
+            data.append([devolucion.id, devolucion.salida_mercancia.id, devolucion.cantidad_devuelta, devolucion.fecha.strftime('%Y-%m-%d %H:%M:%S')])
+
+        # Crear tabla
+        table = Table(data)
+        table.setStyle(style)
+        elements.append(table)
+
+        # Fecha de creación del reporte
+        fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        fecha_style = ParagraphStyle(name='FechaEstilo', fontSize=10, alignment=1, spaceAfter=20)
+        fecha_creacion = Paragraph(f"Fecha de creación del reporte: {fecha_actual}", style=fecha_style)
+        elements.append(fecha_creacion)
+
+        # Construir el documento PDF
+        doc.build(elements)
+
+        return response
