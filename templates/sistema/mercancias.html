@@ -29,6 +29,7 @@ Registro Mercancia
               <th>Codigo</th>
               <th>Categoria</th>
               <th>Cantidad</th>
+              <th>Total Salida</th>
               <th>Valor Unitario</th>
               <th>Acciones</th>
             </tr>
@@ -40,6 +41,7 @@ Registro Mercancia
               <td>{{ mercancia.codigo }}</td>
               <td>{{ mercancia.categoria.nombre }}</td> <!-- Accede al campo nombre de la categoría -->
               <td>{{ mercancia.cantidad }}</td>
+              <td>{{ mercancia.total_cantidad_salidas }}</td>
               <td>{{ mercancia.valor_unitario }}</td>
               <td>
                 {% if mercancia.activo %}
@@ -69,6 +71,13 @@ Registro Mercancia
       </div>
     </div>
   </div>
+
+  {% comment %} <div class="card shadow mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Total de productos</h5>
+        <p class="card-text">{{ total_mercancias }}</p>
+    </div>
+  </div> {% endcomment %}
 
 </div>
 

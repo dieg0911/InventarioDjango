@@ -1,26 +1,59 @@
-{% extends "sistema/base.html"%}
+{% extends "sistema/base.html" %}
 
 {% block title %}
-Nueva Mercancia 
-{%endblock title%}
-
-
+Crear Mercancía
+{% endblock title %}
 
 {% block contenido %}
-<h1 class="display-1">Ingresar Mercancia</h1>
-
-
-<form action="/mercancias/crear/" method="POST">
-
-    {{error}}
-
-    {% csrf_token %}
-    {{form.as_p}}
-
-    <button type="submit" class="btn btn-primary">Crear</button>
-
-</form>
-
-
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-md-8 col-12">
+      <div class="card z-index-0 fadeIn3 fadeInBottom">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+            <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Crear Mercancia</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          {% comment %} {% if error %}
+            <div class="alert alert-danger" role="alert">
+          {%endif %} {% endcomment %}
+          <form method="POST">
+            {% csrf_token %}
+            <div class="input-group input-group-static mb-4">
+              <label for="{{ form.categoria.id_for_label }}">Categoría</label>
+              <select class="form-control" id="{{ form.categoria.id_for_label }}" name="{{ form.categoria.html_name }}">
+                <option selected disabled>{{ form.categoria.label }}</option>
+                {% for choice in form.categoria.field.choices.queryset %}
+                  <option value="{{ choice.pk }}">{{ choice.nombre }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label" for="{{ form.codigo.id_for_label }}">Código</label>
+              {{ form.codigo }}
+            </div>
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label" for="{{ form.nombre.id_for_label }}">Nombre</label>
+              {{ form.nombre }}
+            </div>
+            <div class="input-group input-group-outline my-3">
+              <label class="form-label" for="{{ form.valor_unitario.id_for_label }}">Valor Unitario</label>
+              {{ form.valor_unitario }}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Crear Mercancía</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock contenido %}
+
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+ {%endif %}
