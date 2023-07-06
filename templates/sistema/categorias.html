@@ -13,7 +13,7 @@ Registro Categoria
   <div>
     <p>
       <a href="/categorias/crear/" class="btn btn-info">Agregar Categoría</a>
-      <a href="/categorias/inactivos/" class="btn btn-info ml-auto">Reingresar</a>
+      <a href="/categorias/inactivos/" class="btn btn-info ml-auto">Categorias Inactivas</a>
     </p>
   </div>
 
@@ -36,14 +36,14 @@ Registro Categoria
               <td>
                 {% if categoria.activo %}
                 <!-- Proveedor activo -->
-                <a href="{% url 'detalle_categoria' categoria.id %}" class="btn btn-success">
+                {% comment %} <a href="{% url 'detalle_categoria' categoria.id %}" class="btn btn-success">
                   <span class="icon text-white-50">
                     <i class="fas fa-edit"></i>
                   </span>
                   <span class="text">Editar</span>
-                </a>
+                </a> {% endcomment %}
                 <a href="{% url 'desactivar_categoria' categoria.id %}" class="btn btn-danger">
-                  Borrar
+                  Desactivar
                   <i class="fas fa-trash-alt"></i>
                 </a>
                 {% else %}

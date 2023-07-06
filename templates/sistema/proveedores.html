@@ -13,7 +13,7 @@ Registro Proveedor
   <div>
     <p>
       <a href="/proveedores/crear/" class="btn btn-info">Agregar</a>
-      <a href="{% url 'proveedores_inactivos' %}" class="btn btn-info">Reingresar</a>
+      <a href="{% url 'proveedores_inactivos' %}" class="btn btn-info">Proveedores Inactivos</a>
     </p>
   </div>
   
@@ -28,6 +28,7 @@ Registro Proveedor
               <th>Nombre</th>
               <th>Dirección</th>
               <th>Teléfono</th>
+              <th>Responsable</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -38,6 +39,7 @@ Registro Proveedor
               <td>{{ proveedor.nombre }}</td>
               <td>{{ proveedor.direccion }}</td>
               <td>{{ proveedor.telefono }}</td>
+              <td>{{ proveedor.user }}</td>
               <td>
                 {% if proveedor.activo %}
                 <!-- Proveedor activo -->
@@ -48,7 +50,7 @@ Registro Proveedor
                   <span class="text">Editar</span>
                 </a>
                 <a href="{% url 'desactivar_proveedor' proveedor.id %}" class="btn btn-danger">
-                  Borrar
+                  Desactivar
                   <i class="fas fa-trash-alt"></i>
                 </a>
                 {% else %}

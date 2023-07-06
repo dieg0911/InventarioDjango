@@ -2,6 +2,7 @@ from typing import Any, Dict, Tuple
 from django.db import models, transaction
 from django.db.models import Sum
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator, MaxLengthValidator
 
 # Create your models here.
 
@@ -10,26 +11,42 @@ class Proveedor(models.Model):
     codigo = models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=100, unique=True)
     direccion = models.CharField(max_length=200)
-    telefono = models.CharField(max_length=20)
-    activo = models.BooleanField(default=True)
-    user = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return self.nombre  # s+ ' | ' + self.user.username
-
-
-class Sucursal(models.Model):
-    nombre = models.CharField(max_length=100)
-    direccion = models.CharField(max_length=200)
-    telefono = models.CharField(max_length=20)
-    responsable = models.CharField(max_length=100)
+    telefono = models.CharField(
+        max_length=20,
+        validators=[
+            RegexValidator(
+                regex=r'^\+\d{1,11}$',
+                message='El número de teléfono debe comenzar con "+" y tener un máximo de 11 dígitos.'
+            )
+        ]
+    )
     activo = models.BooleanField(default=True)
     user = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.nombre
+
+
+class Sucursal(models.Model):
+    nombre = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200)
+    telefono = models.CharField(
+        max_length=20,
+        validators=[
+            RegexValidator(
+                regex=r'^\+\d{1,11}$',
+                message='El número de teléfono debe comenzar con "+" y tener un máximo de 11 dígitos.'
+            )
+        ]
+    )
+    responsable = models.CharField(max_length=100)
+    activo = models.BooleanField(default=True)
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.nombre 
 
 
 class Categoria(models.Model):
@@ -136,6 +153,6 @@ class DevolucionMercancia(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.id) + " - " + self.salida_mercancia.mercancia.nombre
 
 

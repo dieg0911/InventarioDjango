@@ -15,7 +15,7 @@ Registro Mercancia
       <a href="/mercancias/crear/" class="btn btn-info">Agregar</a>
       <a href="/categorias/crear/" class="btn btn-info">Agregar Categoría</a>
       <a href="/entradas/crear/" class="btn btn-info">Agregar Stock</a>
-      <a href="/mercancias/inactivos/" class="btn btn-info ml-auto">Reingresar</a>
+      <a href="/mercancias/inactivos/" class="btn btn-info ml-auto">Mercancias Inactivas</a>
     </p>
   </div>
 
@@ -53,7 +53,7 @@ Registro Mercancia
                   <span class="text">Editar</span>
                 </a>
                 <a href="{% url 'desactivar_mercancia' mercancia.id %}" class="btn btn-danger">
-                  Borrar
+                  Desactivar
                   <i class="fas fa-trash-alt"></i>
                 </a>
                 {% else %}

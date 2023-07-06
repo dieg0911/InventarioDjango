@@ -13,7 +13,7 @@ Registro Sucursal
   <div>
     <p>
       <a href="/sucursales/crear/" class="btn btn-info">Agregar</a>
-      <a href="{% url 'sucursales_inactivas' %}" class="btn btn-info">Reingresar</a>
+      <a href="{% url 'sucursales_inactivas' %}" class="btn btn-info">Sucursales Inactivas</a>
     </p>
   </div>
   
@@ -48,7 +48,7 @@ Registro Sucursal
                   <span class="text">Editar</span>
                 </a>
                 <a href="{% url 'desactivar_sucursal' sucursal.id %}" class="btn btn-danger">
-                  Borrar
+                  Desactivar
                   <i class="fas fa-trash-alt"></i>
                 </a>
                 {% else %}

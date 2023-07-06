@@ -1,31 +1,61 @@
-{% extends "sistema/base.html"%}
+{% extends "sistema/base.html" %}
 
 {% block title %}
 Registro 
-{%endblock title%}
-
-
+{% endblock title %}
 
 {% block contenido %}
-<h1 class="display-1">Detalle </h1>
-
-
-<h1 class="display-4">Nombre: {{sucursal.nombre}}</h1> 
-
-{{error}}
-
-<form method="POST" action="">
-
-{% csrf_token %}
-{{form.as_p}}
-
-<button type="submit" class="btn btn-primary">Actualizar</button>
-
-</form>
-
-<form action="{% url 'eliminar_sucursal' sucursal.id %}" method="POST">
-{% csrf_token %}
-
-<button type="submit" class="btn btn-primary">Eliminar</button>
-</form>
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-8 col-12">
+        <div class="card z-index-0 fadeIn3 fadeInBottom">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+              <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Editar Sucursal: {{sucursal.nombre}}</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            {% if form.errors %}
+            <div class="alert">
+              <ul>
+                {% for field, errors in form.errors.items %}
+                  {% for error in errors %}
+                     {{ error }}<br>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            {{error}}
+            <form method="POST" action="">
+              {% csrf_token %}
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label" for="{{ form.nombre.id_for_label }}">Nombre</label>
+                {{ form.nombre }}
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label" for="{{ form.direccion.id_for_label }}">Dirección</label>
+                {{ form.direccion }}
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label" for="{{ form.telefono.id_for_label }}">Teléfono</label>
+                {{ form.telefono }}
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label" for="{{ form.responsable.id_for_label }}">Responsable</label>
+                {{ form.responsable }}
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Actualizar</button>
+              </div>
+            </form>
+            <form action="{% url 'eliminar_sucursal' sucursal.id %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Eliminar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock contenido %}

@@ -10,6 +10,13 @@ Categorias Inactivos
 </br>
 
 <div class="container-fluid">
+  <a href="{% url 'categorias' %}" class="btn btn-primary">
+    <span class="icon text-white-50">
+      <i class="fas fa-arrow-left"></i>
+    </span>
+    <span class="text">Regresar</span>
+  </a>
+
   <div class="card shadow mb-4">
     <div class="card-body">
       <div class="table-responsive">
@@ -18,7 +25,9 @@ Categorias Inactivos
             <tr>
               <th>Nombre</th>
               <th>Descripción</th>
+              {% if request.user.is_superuser%}
               <th>Acciones</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -26,18 +35,15 @@ Categorias Inactivos
             <tr>
                 <td>{{ categoria.nombre }}</td>
                 <td>{{ categoria.descripcion }}</td>
+                {% if request.user.is_superuser%}
               <td>
-                <a href="{% url 'reingresar_categoria' categoria.id %}" class="btn btn-success">
-                  <span class="icon text-white-50">
-                    <i class="fas fa-edit"></i>
-                  </span>
-                  <span class="text">Editar</span>
-                </a>
+
                 <a href="{% url 'eliminar_categoria' categoria.id %}" class="btn btn-primary">
-                  Reingresar
+                  Eliminar
                   <i class="fas fa-undo"></i>
                 </a>
               </td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
