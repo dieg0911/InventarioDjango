@@ -81,9 +81,6 @@ urlpatterns = [
     path('devoluciones/', devoluciones, name='devoluciones'),
     path('devoluciones/crear/', crear_devolucion, name='crear_devolucion'),
     path('devoluciones/deshacer/<int:devolucion_id>/', deshacer_devolucion, name='deshacer_devolucion'),
-    #historial devoluciones
-    # path('historial_devoluciones/', historial_devoluciones, name='historial_devoluciones'),
-    # path('historial_devoluciones/eliminar/<int:historial_devolucion_id>', eliminar_historial_devolucion, name='eliminar_historial_devolucion'),
 
     #reportes
     path('reporte_proveedores/', GenerarReporteProveedoresView.as_view(), name='reporte_proveedores'),

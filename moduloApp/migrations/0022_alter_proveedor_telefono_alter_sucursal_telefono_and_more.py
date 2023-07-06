@@ -22,13 +22,4 @@ class Migration(migrations.Migration):
             name='telefono',
             field=models.CharField(max_length=20, validators=[django.core.validators.RegexValidator(message='El número de teléfono debe comenzar con "+" y tener un máximo de 11 dígitos.', regex='^\\+\\d{1,11}$')]),
         ),
-        migrations.CreateModel(
-            name='HistorialDevolucion',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cantidad_devuelta', models.PositiveIntegerField()),
-                ('fecha', models.DateTimeField(auto_now_add=True)),
-                ('salida_mercancia', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='moduloApp.salidamercancia')),
-            ],
-        ),
     ]
