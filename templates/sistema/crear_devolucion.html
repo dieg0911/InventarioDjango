@@ -1,0 +1,30 @@
+{% extends "sistema/base.html" %}
+
+{% block title %}
+Crear Devolución
+{% endblock title %}
+
+{% block contenido %}
+<h1 class="h3 mb-2 text-gray-800">Crear Devolución</h1>
+
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-8 col-12">
+        <div class="card z-index-0 fadeIn3 fadeInBottom">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+              <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Ingresar Devolucion</h4>
+            </div>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Crear Devolución</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock contenido %}

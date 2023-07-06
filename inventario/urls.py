@@ -77,6 +77,8 @@ urlpatterns = [
     path('historial_salidas/', historial_salidas, name='historial_salidas'),
     path('historial_salidas/eliminar/<int:historial_salida_id>', eliminar_historial_salida, name='eliminar_historial_salida'),
 
- 
+    #devoluciones
+    path('devoluciones/', devoluciones, name='devoluciones'),
+    path('devoluciones/crear/', crear_devolucion, name='crear_devolucion'),
 
 ]

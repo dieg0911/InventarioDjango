@@ -411,9 +411,10 @@ def crear_salida(request):
                 })
         except ValueError:
            return render(request, 'sistema/crear_salida.html', {
-            'form': SalidaMercanciaForm,
+            'form': SalidaMercanciaForm(),
             "error": "Los datos no son válidos" 
-            })
+           })
+
 @login_required
 def eliminar_salida(request, salida_id):
     salida = get_object_or_404(SalidaMercancia, pk=salida_id)
@@ -448,3 +449,45 @@ def eliminar_historial_salida(request, historial_salida_id):
     salida = get_object_or_404(HistorialSalida, pk=historial_salida_id)
     salida.delete()
     return redirect('historial_salidas')
+
+#devoluciones
+@login_required
+def devoluciones(request):
+    devoluciones = DevolucionMercancia.objects.all()
+    return render(request, 'sistema/devoluciones.html', {'devoluciones': devoluciones})
+
+@login_required
+@login_required
+def crear_devolucion(request):
+    if request.method == 'POST':
+        form = DevolucionMercanciaForm(request.POST)
+        if form.is_valid():
+            devolucion = form.save(commit=False)
+            salida_mercancia = devolucion.salida_mercancia
+
+            # Validar que la cantidad devuelta no exceda la cantidad originalmente salida
+            if devolucion.cantidad_devuelta <= salida_mercancia.cantidad:
+                salida_mercancia.cantidad -= devolucion.cantidad_devuelta
+                salida_mercancia.save()
+
+                mercancia = salida_mercancia.mercancia
+                mercancia.cantidad += devolucion.cantidad_devuelta
+                mercancia.save()
+
+                devolucion.user = request.user
+                devolucion.save()
+                return redirect('devoluciones')  # Redirigir a la lista de devoluciones
+            else:
+                return render(request, 'sistema/crear_devolucion.html', {
+                    'form': form,
+                    "error": "La cantidad devuelta excede la cantidad originalmente salida"
+                })
+    else:
+        form = DevolucionMercanciaForm()
+
+    return render(request, 'sistema/crear_devolucion.html', {'form': form})
+
+
+
+
+

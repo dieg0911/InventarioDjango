@@ -1,13 +1,15 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Proveedor, Sucursal, Mercancia, EntradaMercancia, SalidaMercancia, Categoria
+from .models import *
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
+
 
 class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
@@ -42,8 +44,10 @@ class SucursalForm(forms.ModelForm):
         self.fields['telefono'].widget.attrs.update({'class': 'form-control'})
         self.fields['responsable'].widget.attrs.update({'class': 'form-control'})
 
+
 class MercanciaForm(forms.ModelForm):
-    categoria = forms.ModelChoiceField(queryset=Categoria.objects.filter(activo=True))
+    categoria = forms.ModelChoiceField(
+        queryset=Categoria.objects.filter(activo=True))
 
     class Meta:
         model = Mercancia
@@ -61,9 +65,13 @@ class MercanciaForm(forms.ModelForm):
         # Resto del código de validación si es necesario
         return cleaned_data
 
+
 class EntradaMercanciaForm(forms.ModelForm):
-    mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))
-    proveedor = forms.ModelChoiceField(queryset=Proveedor.objects.filter(activo=True))
+    mercancia = forms.ModelChoiceField(
+        queryset=Mercancia.objects.filter(activo=True))
+    proveedor = forms.ModelChoiceField(
+        queryset=Proveedor.objects.filter(activo=True))
+
     class Meta:
         model = EntradaMercancia
         fields = ['mercancia', 'proveedor', 'cantidad']
@@ -74,6 +82,7 @@ class EntradaMercanciaForm(forms.ModelForm):
         self.fields['mercancia'].widget.attrs.update({'class': 'form-control'})
         self.fields['proveedor'].widget.attrs.update({'class': 'form-control'})
         self.fields['cantidad'].widget.attrs.update({'class': 'form-control'})
+
 
 class SalidaMercanciaForm(forms.ModelForm):
     class Meta:
@@ -94,15 +103,12 @@ class SalidaMercanciaForm(forms.ModelForm):
 
         if mercancia and cantidad:
             if cantidad > mercancia.cantidad:
-                self.add_error('cantidad', 'No hay suficiente stock disponible, solo hay {} unidades disponibles'.format(mercancia.cantidad))
+                self.add_error('cantidad', 'No hay suficiente stock disponible, solo hay {} unidades disponibles'.format(
+                    mercancia.cantidad))
 
         return cleaned_data
 
-class DevolucionForm(forms.ModelForm):
-    class Meta:
-        model = SalidaMercancia
-        fields = ['mercancia', 'sucursal', 'cantidad']
-    
+
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
@@ -112,18 +118,37 @@ class CategoriaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['nombre'].widget.attrs.update({'class': 'form-control'})
-        self.fields['descripcion'].widget.attrs.update({'class': 'form-control'})
+        self.fields['descripcion'].widget.attrs.update(
+            {'class': 'form-control'})
 
-# class RegistroCantidadForm(forms.Form):
-#     cantidad = forms.IntegerField(label='Cantidad', min_value=1)
 
 class RegistroEntradaForm(forms.Form):
-    mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))
-    proveedor = forms.ModelChoiceField(queryset=Proveedor.objects.filter(activo=True))
+    mercancia = forms.ModelChoiceField(
+        queryset=Mercancia.objects.filter(activo=True))
+    proveedor = forms.ModelChoiceField(
+        queryset=Proveedor.objects.filter(activo=True))
     cantidad = forms.IntegerField(label='Cantidad', min_value=1)
+
 
 class RegistroSalidaForm(forms.Form):
     mercancia = forms.ModelChoiceField(queryset=Mercancia.objects.filter(activo=True))
     sucursal = forms.ModelChoiceField(queryset=Sucursal.objects.filter(activo=True))
     cantidad = forms.IntegerField(label='Cantidad', min_value=1)
     fecha = forms.DateField(label='Fecha', widget=forms.SelectDateWidget())
+
+
+class DevolucionMercanciaForm(forms.ModelForm):
+    salida_mercancia = forms.ModelChoiceField(queryset=SalidaMercancia.objects.all(), empty_label="Seleccione una salida de mercancía")
+    cantidad_devuelta = forms.IntegerField(min_value=1)
+
+    class Meta:
+        model = DevolucionMercancia
+        fields = ['salida_mercancia', 'cantidad_devuelta']
+
+
+
+
+
+
+
+
