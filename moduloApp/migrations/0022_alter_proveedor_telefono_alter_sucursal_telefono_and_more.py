@@ -21,5 +21,5 @@ class Migration(migrations.Migration):
             model_name='sucursal',
             name='telefono',
             field=models.CharField(max_length=20, validators=[django.core.validators.RegexValidator(message='El número de teléfono debe comenzar con "+" y tener un máximo de 11 dígitos.', regex='^\\+\\d{1,11}$')]),
-        ),
+        ),-
     ]
